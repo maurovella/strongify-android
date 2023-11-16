@@ -4,19 +4,14 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -32,8 +27,24 @@ class MainActivity : ComponentActivity() {
         setContent {
             StrongifyTheme {
                 val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
                 Scaffold(
-                    bottomBar = { BottomBar(navController = navController) },
+                    bottomBar = {
+                        if (shouldShowBottomBar(navController)) {
+                            BottomBar(
+                                currentRoute
+                            ) { route ->
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        }
+                    }
                 ) {
                     StrongifyNavGraph(navController = navController)
                 }
@@ -43,7 +54,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BottomBar(navController: NavController) {
+fun BottomBar(
+    currentRoute: String?,
+    onNavigateToRoute: (String) -> Unit
+) {
     val items = listOf(
         Screen.HomeScreenClass,
         Screen.RoutineScreenClass,
@@ -51,25 +65,45 @@ fun BottomBar(navController: NavController) {
     )
 
     NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
             NavigationBarItem(
                 icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
                 label = { Text(text = item.title) },
                 alwaysShowLabel = true,
                 selected = currentRoute == item.route,
-                onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
+                onClick = { onNavigateToRoute(item.route) }
             )
         }
 
     }
+}
+
+/*
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(navController: NavController) {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route
+
+    SmallTopAppBar(
+        title = { Screen.getTitleFromRoute(currentRoute) },
+        navigationIcon = { Icons.Filled.ArrowBack },
+        actions = { /* Actions composable */ }
+    )
+}
+@Composable
+fun shouldShowTopBar(navController: NavController): Boolean {
+    val currentDestination = navController.currentBackStackEntry?.destination
+    return currentDestination?.route != Screen.HomeScreenClass.route //&&
+    //currentDestination?.route != Screen.LoginScreenClass.route &&
+    //currentDestination?.route != Screen.RegisterScreenClass.route
+}
+*/
+
+@Composable
+fun shouldShowBottomBar(navController: NavController): Boolean {
+    val currentDestination = navController.currentBackStackEntry?.destination
+    return currentDestination?.route != Screen.HomeScreenClass.route //&&
+            //currentDestination?.route != Screen.LoginScreenClass.route &&
+            //currentDestination?.route != Screen.RegisterScreenClass.route
 }

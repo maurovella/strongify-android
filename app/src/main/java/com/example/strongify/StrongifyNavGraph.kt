@@ -12,14 +12,16 @@ import com.example.strongify.ui.screens.Screen
 
 @Composable
 fun StrongifyNavGraph(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    startDestination: String = Screen.LoginScreenClass.route
 ) {
-    val uri = "http://www.strongify.com"
-    val secureUri = "https://www.strongify.com"
     NavHost(
         navController = navController,
-        startDestination = Screen.HomeScreenClass.route
+        startDestination = startDestination
     ) {
+        composable(Screen.LoginScreenClass.route) {
+            LoginScreen()
+        }
         composable(Screen.HomeScreenClass.route) {
             HomeScreen()
         }
