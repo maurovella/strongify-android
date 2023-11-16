@@ -1,4 +1,4 @@
-package com.example.strongify.ui.main
+package com.example.strongify
 
 import com.example.strongify.data.model.Error
 import com.example.strongify.data.model.Sport

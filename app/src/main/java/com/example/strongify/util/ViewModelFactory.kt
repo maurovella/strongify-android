@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.strongify.data.repository.SportRepository
 import com.example.strongify.data.repository.UserRepository
-import com.example.strongify.ui.main.MainViewModel
+import com.example.strongify.MainViewModel
 
 class ViewModelFactory constructor(
     private val sessionManager: SessionManager,

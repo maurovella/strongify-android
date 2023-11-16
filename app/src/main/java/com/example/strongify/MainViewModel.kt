@@ -1,4 +1,4 @@
-package com.example.strongify.ui.main
+package com.example.strongify
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

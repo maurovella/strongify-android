@@ -1,4 +1,4 @@
-package com.example.strongify.ui.main
+package com.example.strongify
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.strongify.R
 import com.example.strongify.data.model.Sport
 import com.example.strongify.ui.theme.ApiTheme
 import com.example.strongify.util.getViewModelFactory
