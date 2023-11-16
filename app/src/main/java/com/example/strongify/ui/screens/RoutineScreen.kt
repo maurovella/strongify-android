@@ -1,29 +1,77 @@
 package com.example.strongify.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+//import androidx.compose.material3.icons.Icons
+//import androidx.compose.material3.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.strongify.R
+import com.example.strongify.ui.components.RoutineCard
 
 @Composable
 fun RoutineScreen() {
-    Surface {
+    Surface(color = Color.Black) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize(1f)
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = stringResource(id = R.string.nav_routines),
-                fontSize = 30.sp
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.clickable { /* Acción al presionar la flecha */ }
+                )
+                Text(
+                    text = stringResource(id = R.string.nav_routines),
+                    fontSize = 30.sp,
+                    color = Color.White,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                content = {
+                    itemsIndexed(routines) { _, routine ->
+                        RoutineCard(
+                            category = routine.category,
+                            routineName = routine.routineName,
+                            difficulty = routine.difficulty
+                        )
+                    }
+                }
             )
         }
     }
 }
+
+
+data class Routine(
+    val category: String,
+    val routineName: String,
+    val difficulty: String
+)
+
+val routines = listOf(
+    Routine("Cardio", "Cardio Workout", "Novato"),
+    Routine("Fuerza", "Rutina de Fuerza", "Intermedio"),
+    Routine("Flexibilidad", "Estiramiento", "Principiante"),
+    Routine("Yoga", "Clase de Yoga", "Avanzado")
+)

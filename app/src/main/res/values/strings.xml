@@ -3,4 +3,5 @@
 
     <string name="nav_home">Home</string>
     <string name="nav_routines">Routines</string>
+    <string name="nav_favorite">Favorites</string>
 </resources>

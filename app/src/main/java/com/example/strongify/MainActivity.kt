@@ -46,7 +46,8 @@ class MainActivity : ComponentActivity() {
 fun BottomBar(navController: NavController) {
     val items = listOf(
         Screen.HomeScreenClass,
-        Screen.RoutineScreenClass
+        Screen.RoutineScreenClass,
+        Screen.FavoriteScreenClass
     )
 
     NavigationBar {
