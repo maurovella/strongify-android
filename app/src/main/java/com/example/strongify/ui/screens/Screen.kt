@@ -15,32 +15,31 @@ sealed class Screen(
     object LoginScreenClass: Screen(
         title = "Login",
         icon = Icons.Filled.Info,
-        route = "login_screen"
+        route = "login"
+    )
+    object RegisterScreenClass: Screen(
+        title = "Register",
+        icon = Icons.Filled.Info,
+        route = "register"
     )
     object HomeScreenClass: Screen(
         title = "Home",
         icon = Icons.Filled.Home,
-        route = "home_screen"
+        route = "home"
     )
     object RoutineScreenClass: Screen(
         title = "Routine",
         icon = Icons.Filled.Build,
-        route = "routine_screen"
+        route = "routines"
     )
-
+    object RoutineDetailScreenClass: Screen(
+        title = "Routine Detail",
+        icon = Icons.Filled.Build,
+        route = "routines/{routineId}"
+    )
     object FavoriteScreenClass: Screen(
         title = "Favorite",
         icon = Icons.Filled.Favorite,
         route = "favorite_screen"
     )
-
-    companion object {
-        fun getTitleFromRoute(currentRoute: String?) {
-            when (currentRoute) {
-                "home_screen" -> "Home"
-                "routine_screen" -> "Routine"
-                "favorite_screen" -> "Favorite"
-            }
-        }
-    }
 }

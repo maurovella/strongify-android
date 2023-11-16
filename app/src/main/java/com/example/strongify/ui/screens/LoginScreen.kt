@@ -1,7 +1,6 @@
 package com.example.strongify.ui.screens
 
 import android.annotation.SuppressLint
-import android.graphics.Paint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,10 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,7 +27,10 @@ import com.example.strongify.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onLogin: () -> Unit = {},
+    navToRegister: () -> Unit = {}
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -95,7 +98,7 @@ fun LoginScreen() {
                     )
 
                     Button(
-                        onClick = { /* Handle login button click */ },
+                        onClick = { onLogin() },
                         modifier = Modifier
                             .fillMaxWidth(0.8f) // Set to occupy 80% of the width
                             .height(60.dp),
@@ -118,6 +121,22 @@ fun LoginScreen() {
                             modifier = Modifier.padding(0.dp)
                         )
                     }
+
+                    Text(
+                        text = buildAnnotatedString {
+                            append("¿No tienes una cuenta? ")
+                            withStyle(style = SpanStyle(color = Color.Red)) {
+                                append("¡Regístrate!")
+                            }
+                        },
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .clickable {
+                                navToRegister()
+                            }
+                            .align(Alignment.CenterHorizontally)
+                            .padding(16.dp)
+                    )
 //                    Row(
 //                        modifier = Modifier
 //                            .fillMaxWidth()

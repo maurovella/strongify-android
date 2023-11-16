@@ -103,7 +103,6 @@ fun shouldShowTopBar(navController: NavController): Boolean {
 @Composable
 fun shouldShowBottomBar(navController: NavController): Boolean {
     val currentDestination = navController.currentBackStackEntry?.destination
-    return currentDestination?.route != Screen.HomeScreenClass.route //&&
-            //currentDestination?.route != Screen.LoginScreenClass.route &&
-            //currentDestination?.route != Screen.RegisterScreenClass.route
+    return  currentDestination?.route != Screen.LoginScreenClass.route &&
+            currentDestination?.route != Screen.RegisterScreenClass.route
 }
