@@ -1,66 +1,27 @@
 package com.example.strongify
 
-import android.app.AlarmManager
 import android.app.Application
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.os.Build
-import android.os.SystemClock
-import android.util.Log
-import androidx.core.app.NotificationManagerCompat
+import com.example.strongify.data.network.SportRemoteDataSource
+import com.example.strongify.data.network.UserRemoteDataSource
+import com.example.strongify.data.network.api.RetrofitClient
+import com.example.strongify.data.repository.SportRepository
+import com.example.strongify.data.repository.UserRepository
+import com.example.strongify.util.SessionManager
 
 class Strongify : Application() {
 
-    override fun onCreate() {
-        super.onCreate()
+    private val userRemoteDataSource: UserRemoteDataSource
+        get() = UserRemoteDataSource(sessionManager, RetrofitClient.getApiUserService(this))
 
-        //createNotificationChannel()
+    private val sportRemoteDataSource: SportRemoteDataSource
+        get() = SportRemoteDataSource(RetrofitClient.getApiSportService(this))
 
-        //collectServerEvents()
-    }
+    val sessionManager: SessionManager
+        get() = SessionManager(this)
 
-    /*private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.channel_name)
-            val descriptionText = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
+    val userRepository: UserRepository
+        get() = UserRepository(userRemoteDataSource)
 
-            with(NotificationManagerCompat.from(this)) {
-                createNotificationChannel(channel)
-            }
-        }
-    }*/
-
-    /*private fun collectServerEvents() {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, ServerEventReceiver::class.java)
-
-        var pendingIntent = PendingIntent.getBroadcast(
-            this, 0, intent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)
-        if (pendingIntent != null)
-            alarmManager.cancel(pendingIntent)
-
-        pendingIntent = PendingIntent.getBroadcast(
-            this, 0, intent, PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            SystemClock.currentThreadTimeMillis(),
-            INTERVAL,
-            pendingIntent
-        )
-        Log.d(TAG, "Alarm set every $INTERVAL millis")
-    }*/
-
-    companion object {
-        const val TAG = "SmartLiving"
-        const val INTERVAL: Long = 1000 * 60
-        const val CHANNEL_ID = "device"
-    }
+    val sportRepository: SportRepository
+        get() = SportRepository(sportRemoteDataSource)
 }
