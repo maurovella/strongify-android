@@ -70,7 +70,7 @@ fun MainScreen(
             ActionButton(
                 resId = R.string.login,
                 onClick = {
-                    viewModel.login("johndoee", "1234567890")
+                    viewModel.login("smedin", "12345678")
                 })
         } else {
             ActionButton(
