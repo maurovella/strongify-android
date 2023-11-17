@@ -1,6 +1,7 @@
 package com.example.strongify.ui.screens
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -40,9 +42,9 @@ fun LoginScreen(
 ) {
     val userState = remember { mutableStateOf("") }
     val pswState = remember { mutableStateOf("") }
-    
+    val context = LocalContext.current
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         Box(
             modifier = Modifier
@@ -108,8 +110,18 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
-                            viewModel.login(userState.value,pswState.value)
-                            onLogin()
+                            viewModel.login(userState.value,pswState.value,
+                                {
+                                    onLogin()
+                                },
+                                {
+                                    if (it == "Connection error")
+                                        Toast.makeText(context,"Error!",Toast.LENGTH_LONG).show()
+
+                                    if (it == "Invalid username or password" || it == "")
+                                        Toast.makeText(context,"Contraseña o usuario invalido!",Toast.LENGTH_LONG).show()
+                                }
+                            )
                         },
                         modifier = Modifier
                             .fillMaxWidth(0.8f) // Set to occupy 80% of the width

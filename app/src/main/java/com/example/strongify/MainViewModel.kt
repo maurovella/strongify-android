@@ -23,9 +23,11 @@ class MainViewModel(
     var uiState by mutableStateOf(MainUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
         private set
 
-    fun login(username: String, password: String) = runOnViewModelScope(
+    fun login(username: String, password: String, successFunc: () -> Unit, failedFunc: suspend (String) -> Unit) = runOnViewModelScopeLogin(
         { userRepository.login(username, password) },
-        { state, _ -> state.copy(isAuthenticated = true) }
+        { state, _ -> state.copy(isAuthenticated = true) },
+        successFunc,
+        failedFunc
     )
 
     fun logout() = runOnViewModelScope(
@@ -80,9 +82,27 @@ class MainViewModel(
         }
     )
 
+    private fun <R> runOnViewModelScopeLogin(
+        block: suspend () -> R,
+        updateState: (MainUiState, R) -> MainUiState,
+        succesFunc: () -> Unit,
+        failedFunc: suspend (String) -> Unit
+    ): Job = viewModelScope.launch {
+        uiState = uiState.copy(isFetching = true, error = null)
+        runCatching {
+            block()
+        }.onSuccess { response ->
+            uiState = updateState(uiState, response).copy(isFetching = false)
+            succesFunc()
+        }.onFailure { e ->
+            uiState = uiState.copy(isFetching = false, error = handleError(e))
+            failedFunc(e.message!!)
+        }
+    }
+
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
-        updateState: (MainUiState, R) -> MainUiState
+        updateState: (MainUiState, R) -> MainUiState,
     ): Job = viewModelScope.launch {
         uiState = uiState.copy(isFetching = true, error = null)
         runCatching {
