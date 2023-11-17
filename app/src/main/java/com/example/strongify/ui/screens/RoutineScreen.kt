@@ -9,69 +9,84 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-//import androidx.compose.material3.icons.Icons
-//import androidx.compose.material3.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.ui.components.RoutineCard
+import com.example.strongify.util.getViewModelFactory
 
 @Composable
-fun RoutineScreen() {
-    Surface(color = Color.Black) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, top = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+fun RoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    navToRoutineDetail: (Int) -> Unit
+    ) {
+        Surface(color = Color.Black) {
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.clickable { /* Acción al presionar la flecha */ }
-                )
-                Text(
-                    text = stringResource(id = R.string.nav_routines),
-                    fontSize = 30.sp,
-                    color = Color.White,
-                    modifier = Modifier.padding(start = 16.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.clickable { /* Acción al presionar la flecha */ }
+                    )
+                    Text(
+                        text = stringResource(id = R.string.nav_routines),
+                        fontSize = 30.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
+                LaunchedEffect(key1 = true) {
+                    viewModel.getFavorites()
+                    viewModel.getRoutines() // Llama a getRoutines solo una vez cuando se carga la pantalla
+                }
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    content = {
+                        //viewModel.getRoutines()
+                        val routines = viewModel.uiState.routines
+                        val favorites = viewModel.uiState.favorites
+                        if(!routines.isNullOrEmpty()){
+                            itemsIndexed(routines) { _, routine ->
+                                val isFaved = favorites?.any { it.id == routine.id } ?: false
+                                RoutineCard(
+                                    viewModel,
+                                    routine,
+                                    isFaved = isFaved,
+                                    modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }),
+                                    func = navToRoutineDetail
+                                )
+                            }
+                        } else {
+                            item {
+                                // Mensaje a mostrar cuando no hay favoritos
+                                Text(
+                                    text = stringResource(id = R.string.no_routines),
+                                    color = Color.White,
+                                    fontSize = 20.sp,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                )
+                            }
+                        }
+                    }
                 )
             }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                content = {
-                    itemsIndexed(routines) { _, routine ->
-                        RoutineCard(
-                            category = routine.category,
-                            routineName = routine.routineName,
-                            difficulty = routine.difficulty
-                        )
-                    }
-                }
-            )
+                            
         }
     }
-}
-
-
-data class Routine(
-    val category: String,
-    val routineName: String,
-    val difficulty: String
-)
-
-val routines = listOf(
-    Routine("Cardio", "Cardio Workout", "Novato"),
-    Routine("Fuerza", "Rutina de Fuerza", "Intermedio"),
-    Routine("Flexibilidad", "Estiramiento", "Principiante"),
-    Routine("Yoga", "Clase de Yoga", "Avanzado")
-)

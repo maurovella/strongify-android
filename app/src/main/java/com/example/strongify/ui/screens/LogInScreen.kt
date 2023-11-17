@@ -1,7 +1,7 @@
 package com.example.strongify.ui.screens
 
 import android.annotation.SuppressLint
-import android.graphics.Paint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,12 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,12 +37,15 @@ import com.example.strongify.util.getViewModelFactory
 @Preview
 @Composable
 fun LoginScreen(
-    viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    onLogin: () -> Unit = {},
+    navToRegister: () -> Unit = {}
 ) {
     val userState = remember { mutableStateOf("") }
     val pswState = remember { mutableStateOf("") }
+    val context = LocalContext.current
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         Box(
             modifier = Modifier
@@ -68,13 +74,13 @@ fun LoginScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Login", // Update text for login
+                        text = stringResource(id = R.string.login), // Update text for login
                         fontSize = 20.sp,
                         color = Color.White,
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
                     LabeledTextField(
-                        label = "Username", // Title above the text field
+                        label = stringResource(id = R.string.username), // Title above the text field
                         value = userState.value,
                         onValueChange = { userState.value = it },
                         visualTransformation = VisualTransformation.None,
@@ -89,7 +95,7 @@ fun LoginScreen(
                     )
 
                     LabeledTextField(
-                        label = "Password", // Title above the text field
+                        label = stringResource(id = R.string.password), // Title above the text field
                         value = pswState.value, // Empty string for user to input password
                         onValueChange = { pswState.value = it },
                         visualTransformation = PasswordVisualTransformation(),
@@ -105,7 +111,20 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
-                            viewModel.login(userState.value,pswState.value)
+                            viewModel.login(userState.value,pswState.value,
+                                {
+                                    onLogin()
+                                },
+                                {
+                                    if (it == "Connection error")
+                                        Toast.makeText(context,"Error!",Toast.LENGTH_LONG).show()
+
+                                    if (it == "Invalid username or password" || it == "") {
+                                        val errorMessage = context.getString(R.string.login_error)
+                                        Toast.makeText(context, errorMessage,Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                            )
                         },
                         modifier = Modifier
                             .fillMaxWidth(0.8f) // Set to occupy 80% of the width
@@ -124,11 +143,27 @@ fun LoginScreen(
                         enabled = true
                     ) {
                         Text(
-                            text = "Login", // Change button text
+                            text = stringResource(id = R.string.login), // Change button text
                             fontSize = 16.sp,
                             modifier = Modifier.padding(0.dp)
                         )
                     }
+
+                    Text(
+                        text = buildAnnotatedString {
+                            append(stringResource(id = R.string.no_account_msg))
+                            withStyle(style = SpanStyle(color = Color.Red)) {
+                                append(stringResource(id = R.string.register_cta))
+                            }
+                        },
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .clickable {
+                                navToRegister()
+                            }
+                            .align(Alignment.CenterHorizontally)
+                            .padding(16.dp)
+                    )
 //                    Row(
 //                        modifier = Modifier
 //                            .fillMaxWidth()
