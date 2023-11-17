@@ -61,15 +61,20 @@ class MainViewModel(
         { state, response -> state.copy(currentSport = response) }
     )
 
-    fun getRoutines() = runOnViewModelScope(
-        { routineRepository.getRoutines() },
-        { state, response -> state.copy(routines = response)}
-    )
+    suspend fun getRoutines() {
+        getFavorites()
+        runOnViewModelScope(
+            { routineRepository.getRoutines() },
+            { state, response -> state.copy(routines = response) }
+        )
+    }
 
-    fun getFavorites() = runOnViewModelScope(
-        { favouriteRepository.getFavourites() },
-        { state, response -> state.copy(favorites = response) }
-    )
+    suspend fun getFavorites() {
+        runOnViewModelScope(
+            { favouriteRepository.getFavourites() },
+            { state, response -> state.copy(favorites = response) }
+        )
+    }
 
 
 
@@ -97,6 +102,30 @@ class MainViewModel(
             )
         }
     )
+
+    suspend fun addFavorite(routineId: Int) {
+        runOnViewModelScope(
+            { favouriteRepository.markFavourite(routineId = routineId) },
+            { state, response ->
+                state.copy(
+                    isFetching = false
+                )
+            }
+        )
+        getFavorites()
+    }
+
+    suspend fun deleteFavorite(routineId: Int) {
+        runOnViewModelScope(
+            { favouriteRepository.removeFavourite(routineId) },
+            { state, response ->
+                state.copy(
+                    isFetching = false
+                )
+            }
+        )
+        getFavorites()
+    }
 
     private fun <R> runOnViewModelScopeLogin(
         block: suspend () -> R,

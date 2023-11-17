@@ -51,6 +51,7 @@ fun RoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFac
                     )
                 }
                 LaunchedEffect(key1 = true) {
+                    viewModel.getFavorites()
                     viewModel.getRoutines() // Llama a getRoutines solo una vez cuando se carga la pantalla
                 }
                 LazyColumn(
@@ -58,10 +59,14 @@ fun RoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFac
                     content = {
                         //viewModel.getRoutines()
                         val routines = viewModel.uiState.routines
+                        val favorites = viewModel.uiState.favorites
                         if(!routines.isNullOrEmpty()){
                             itemsIndexed(routines) { _, routine ->
+                                val isFaved = favorites?.any { it.id == routine.id } ?: false
                                 RoutineCard(
+                                    viewModel,
                                     routine,
+                                    isFaved = isFaved,
                                     modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }),
                                     func = navToRoutineDetail
                                 )

@@ -64,7 +64,9 @@ fun FavoriteScreen(
                     if(!favorites.isNullOrEmpty()){
                         itemsIndexed(favorites) { _, routine ->
                             RoutineCard(
+                                viewModel,
                                 routine,
+                                isFaved = true,
                                 modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }),
                                 func = navToRoutineDetail
                             )

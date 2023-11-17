@@ -19,21 +19,33 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.data.model.Routine
+import com.example.strongify.util.getViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun RoutineCard(
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     routine: Routine,
     func: (Int) -> Unit,
+    isFaved: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val isFav = remember { mutableStateOf(isFaved)}
     val difficultyColor = when (routine.difficulty) {
         "Novato", "Principiante" -> Color.Green
         "Intermedio" -> Color.Yellow
@@ -83,14 +95,29 @@ fun RoutineCard(
                     )
                 }
             }
-
-            // Icono de corazón
-            Icon(
-                imageVector = Icons.Filled.Favorite,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.padding(8.dp).size(32.dp).clickable { /* Acción al hacer clic en el icono de corazón */ }
-            )
+            if(!isFav.value) {
+                // Icono de corazón
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.padding(8.dp).size(32.dp)
+                        .clickable { CoroutineScope(Dispatchers.Main).launch{
+                            viewModel.addFavorite(routine.id)
+                        }
+                                   isFav.value = !isFav.value},
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = null,
+                    tint = Color.Red,
+                    modifier = Modifier.padding(8.dp).size(32.dp)
+                        .clickable { CoroutineScope(Dispatchers.Main).launch{
+                            viewModel.deleteFavorite(routine.id)}
+                                   isFav.value = !isFav.value},
+                )
+            }
         }
 
         // Imagen por defecto (¡Recuerda reemplazar el recurso con la imagen adecuada!)
