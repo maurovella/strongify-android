@@ -1,5 +1,8 @@
 package com.example.strongify
 
+import com.example.strongify.data.model.CompleteCycle
+import com.example.strongify.data.model.CompleteCycleExercise
+import com.example.strongify.data.model.CycleData
 import com.example.strongify.data.model.Error
 import com.example.strongify.data.model.Routine
 import com.example.strongify.data.model.Sport
@@ -13,7 +16,12 @@ data class MainUiState(
     val currentSport: Sport? = null,
     val error: Error? = null,
     val routines: List<Routine>? = null,
-    val favorites: List<Routine>? = null
+    val favorites: List<Routine>? = null,
+    val order: String? = "date",
+    val dir: String? = "asc",
+    val routinesCycles: List<CompleteCycle>? = null,
+    val cycleExercise: List<CompleteCycleExercise>? = null,
+    var cycleDataList: List<CycleData> = emptyList(),
 )
 
 val MainUiState.canGetCurrentUser: Boolean get() = isAuthenticated

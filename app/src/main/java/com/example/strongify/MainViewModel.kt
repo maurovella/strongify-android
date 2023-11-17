@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.strongify.data.DataSourceException
+import com.example.strongify.data.model.CycleData
 import com.example.strongify.data.model.Sport
 import com.example.strongify.data.repository.SportRepository
 import com.example.strongify.data.repository.UserRepository
@@ -13,14 +14,18 @@ import com.example.strongify.util.SessionManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.example.strongify.data.model.Error
+import com.example.strongify.data.repository.CyclesExercisesRepository
 import com.example.strongify.data.repository.FavouriteRepository
 import com.example.strongify.data.repository.RoutineRepository
+import com.example.strongify.data.repository.RoutinesCyclesRepository
 
 class MainViewModel(
     sessionManager: SessionManager,
     private val userRepository: UserRepository,
     private val sportRepository: SportRepository,
     private val routineRepository: RoutineRepository,
+    private val routinesCyclesRepository: RoutinesCyclesRepository,
+    private val cyclesExercisesRepository: CyclesExercisesRepository,
     private val favouriteRepository: FavouriteRepository
 ) : ViewModel() {
 
@@ -61,22 +66,49 @@ class MainViewModel(
         { state, response -> state.copy(currentSport = response) }
     )
 
-    suspend fun getRoutines() {
-        getFavorites()
+    fun getRoutines() {
         runOnViewModelScope(
             { routineRepository.getRoutines() },
             { state, response -> state.copy(routines = response) }
         )
+        getFavorites()
     }
 
-    suspend fun getFavorites() {
+    fun getFilteredRoutines(order: String = "date", dir: String = "asc") {
+        runOnViewModelScope(
+            { routineRepository.getRoutinesWFilter(order, dir) },
+            { state, response -> state.copy(routines = response) }
+        )
+        getFavorites()
+    }
+
+    fun getRoutineCycles(routineId: Int) = runOnViewModelScope(
+        { routinesCyclesRepository.getRoutineCycles(routineId) },
+        { state, response -> state.copy( isFetching = false, routinesCycles = response) }
+    )
+
+    fun getCycleExercises(cycleId: Int) = runOnViewModelScope(
+        { cyclesExercisesRepository.getCycleExercises(cycleId) },
+        { state, response -> state.copy( isFetching = false, cycleExercise = response) }
+    )
+
+    fun getRoutineDetail(routineId: Int) = runOnViewModelScope(
+        { getRoutineCycles(routineId).join()
+            for(cycle in uiState.routinesCycles!!) {
+                getCycleExercises(cycle.id).join()
+
+                uiState.cycleDataList = uiState.cycleDataList.plus(CycleData(cycle.name, cycle.repetitions, uiState.cycleExercise!!))
+            }
+        },
+        { state, response -> state.copy(isFetching = false) }
+    )
+
+    fun getFavorites() {
         runOnViewModelScope(
             { favouriteRepository.getFavourites() },
             { state, response -> state.copy(favorites = response) }
         )
     }
-
-
 
     fun addOrModifySport(sport: Sport) = runOnViewModelScope(
         {
@@ -103,7 +135,7 @@ class MainViewModel(
         }
     )
 
-    suspend fun addFavorite(routineId: Int) {
+    fun addFavorite(routineId: Int) {
         runOnViewModelScope(
             { favouriteRepository.markFavourite(routineId = routineId) },
             { state, response ->
@@ -115,7 +147,7 @@ class MainViewModel(
         getFavorites()
     }
 
-    suspend fun deleteFavorite(routineId: Int) {
+    fun deleteFavorite(routineId: Int) {
         runOnViewModelScope(
             { favouriteRepository.removeFavourite(routineId) },
             { state, response ->
