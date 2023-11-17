@@ -136,6 +136,10 @@ routineId: Int) {
                 modifier = Modifier.size(250.dp)
             )
             Text(text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].exercise.name , color = Color.White)
+            Text(text = viewModel.uiState.cycleDataList.size.toString() , color = Color.White)
+            Text(text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size.toString() , color = Color.White)
+            Text(text = cycleIdx.intValue.toString() , color = Color.White)
+            Text(text = exIdx.intValue.toString() , color = Color.White)
             Text(text = "Repetitions" + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions, color = Color.White)
             Text(text = "Tiempo estimado" + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration, color = Color.White)
             Text(text = "Series" + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions, color = Color.White)
@@ -150,11 +154,36 @@ routineId: Int) {
                     Text(text = "+")
                 }
             }
-            Button(
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                onClick = { /*TODO*/ }
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = stringResource(id = R.string.next))
+                if( !( cycleIdx.intValue == 0 && exIdx.intValue == 0 ))
+                    Button(onClick = {
+                            if (exIdx.intValue == 0) {
+                                cycleIdx.intValue--
+                                exIdx.intValue = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size -1
+                            } else {
+                                exIdx.intValue--
+                            }
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.previous))
+                    }
+                if( !(viewModel.uiState.cycleDataList.size -1 == cycleIdx.intValue && viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size-1 == exIdx.intValue) ) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                        onClick = {
+                            if (viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size - 1 == exIdx.intValue) {
+                                exIdx.intValue = 0
+                                cycleIdx.intValue++
+                            } else {
+                                exIdx.intValue++
+                            }
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.next))
+                    }
+                }
             }
             Button(
                 //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
