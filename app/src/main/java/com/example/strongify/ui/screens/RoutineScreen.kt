@@ -9,8 +9,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-//import androidx.compose.material3.icons.Icons
-//import androidx.compose.material3.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +20,9 @@ import com.example.strongify.R
 import com.example.strongify.ui.components.RoutineCard
 
 @Composable
-fun RoutineScreen() {
+fun RoutineScreen(
+    navToRoutineDetail: (Int) -> Unit
+) {
     Surface(color = Color.Black) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -53,7 +53,8 @@ fun RoutineScreen() {
                         RoutineCard(
                             category = routine.category,
                             routineName = routine.routineName,
-                            difficulty = routine.difficulty
+                            difficulty = routine.difficulty,
+                            modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.routineId) })
                         )
                     }
                 }
@@ -66,12 +67,13 @@ fun RoutineScreen() {
 data class Routine(
     val category: String,
     val routineName: String,
+    val routineId: Int,
     val difficulty: String
 )
 
 val routines = listOf(
-    Routine("Cardio", "Cardio Workout", "Novato"),
-    Routine("Fuerza", "Rutina de Fuerza", "Intermedio"),
-    Routine("Flexibilidad", "Estiramiento", "Principiante"),
-    Routine("Yoga", "Clase de Yoga", "Avanzado")
+    Routine("Cardio", "Cardio Workout", 1, "Novato"),
+    Routine("Fuerza", "Rutina de Fuerza", 2, "Intermedio"),
+    Routine("Flexibilidad", "Estiramiento", 3, "Principiante"),
+    Routine("Yoga", "Clase de Yoga", 4, "Avanzado")
 )

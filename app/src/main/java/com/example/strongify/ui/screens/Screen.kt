@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(
@@ -11,17 +12,31 @@ sealed class Screen(
     val icon: ImageVector,
     val route: String
 ) {
+    object LoginScreenClass: Screen(
+        title = "Login",
+        icon = Icons.Filled.Info,
+        route = "login"
+    )
+    object RegisterScreenClass: Screen(
+        title = "Register",
+        icon = Icons.Filled.Info,
+        route = "register"
+    )
     object HomeScreenClass: Screen(
         title = "Home",
         icon = Icons.Filled.Home,
-        route = "home_screen"
+        route = "home"
     )
     object RoutineScreenClass: Screen(
         title = "Routine",
         icon = Icons.Filled.Build,
-        route = "routine_screen"
+        route = "routines"
     )
-
+    object RoutineDetailScreenClass: Screen(
+        title = "Routine Detail",
+        icon = Icons.Filled.Build,
+        route = "routines/{routineId}"
+    )
     object FavoriteScreenClass: Screen(
         title = "Favorite",
         icon = Icons.Filled.Favorite,

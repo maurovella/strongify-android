@@ -31,7 +31,8 @@ import com.example.strongify.R
 fun RoutineCard(
     category: String,
     routineName: String,
-    difficulty: String // Agregamos el parámetro de dificultad
+    difficulty: String,
+    modifier: Modifier = Modifier
 ) {
     val difficultyColor = when (difficulty) {
         "Novato", "Principiante" -> Color.Green
