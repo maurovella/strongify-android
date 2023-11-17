@@ -75,7 +75,7 @@ fun RoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFac
                             item {
                                 // Mensaje a mostrar cuando no hay favoritos
                                 Text(
-                                    text = "Ups! Parece que todavía no tienes rutinas!",
+                                    text = stringResource(id = R.string.no_routines),
                                     color = Color.White,
                                     fontSize = 20.sp,
                                     modifier = Modifier

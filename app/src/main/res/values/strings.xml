@@ -1,7 +1,20 @@
 <resources>
     <string name="app_name">Strongify</string>
-
     <string name="nav_home">Home</string>
     <string name="nav_routines">Routines</string>
     <string name="nav_favorite">Favorites</string>
+    <string name="no_favs">Oops! Seems like you don\'t have any favorites yet!</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login_error">Invalid password or user!</string>
+    <string name="no_account_msg">Don\'t have an account? </string>
+    <string name="register_cta">Register!</string>
+    <string name="finished_routine">You\'ve finished the routine: ROUTINE</string>
+    <string name="rate">Rate it</string>
+    <string name="register">Register</string>
+    <string name="no_routines">Oops! Seems like you don\'t have any routines yet!</string>
+    <string name="sequential">Sequential</string>
+    <string name="next">Next exercise</string>
+    <string name="finish">Finish</string>
 </resources>

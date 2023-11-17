@@ -75,7 +75,7 @@ fun FavoriteScreen(
                         item {
                             // Mensaje a mostrar cuando no hay favoritos
                             Text(
-                                text = "Ups! Parece que todavía no tienes rutinas favoritas!",
+                                text = stringResource(id = R.string.no_favs),
                                 color = Color.White,
                                 fontSize = 20.sp,
                                 modifier = Modifier

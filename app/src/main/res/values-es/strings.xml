@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Strongify</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_routines">Rutinas</string>
+    <string name="nav_favorite">Favoritas</string>
+    <string name="no_favs">Ups! Parece que todavía no tienes rutinas favoritas!</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="login_error">Contraseña o usuario invalido!</string>
+    <string name="no_account_msg">¿No tienes una cuenta? </string>
+    <string name="register_cta">¡Regístrate!</string>
+    <string name="finished_routine">Finalizaste la rutina: RUTINA</string>
+    <string name="rate">Califícala</string>
+    <string name="register">Registrarse</string>
+    <string name="no_routines">Ups! Parece que todavía no tienes rutinas!</string>
+    <string name="sequential">Secuencial</string>
+    <string name="next">Próximo ejericio</string>
+    <string name="finish">Terminar</string>
+</resources>

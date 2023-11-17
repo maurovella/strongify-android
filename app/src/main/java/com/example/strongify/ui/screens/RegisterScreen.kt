@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,14 +56,14 @@ fun RegisterScreen() {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Register", // Update text for registration
+                        text = stringResource(id = R.string.register), // Update text for registration
                         fontSize = 20.sp,
                         color = Color.White,
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
 
                     LabeledTextField(
-                        label = "Username", // Title above the text field
+                        label = stringResource(id = R.string.username), // Title above the text field
                         value = "", // Empty string for user to input username
                         onValueChange = { /* Handle the value change */ },
                         visualTransformation = VisualTransformation.None,
@@ -92,7 +93,7 @@ fun RegisterScreen() {
                     )
 
                     LabeledTextField(
-                        label = "Password", // Title above the text field
+                        label = stringResource(id = R.string.password), // Title above the text field
                         value = "", // Empty string for user to input password
                         onValueChange = { /* Handle the value change */ },
                         visualTransformation = PasswordVisualTransformation(),
@@ -127,7 +128,7 @@ fun RegisterScreen() {
                         enabled = true
                     ) {
                         Text(
-                            text = "Register", // Change button text
+                            text = stringResource(id = R.string.register), // Change button text
                             fontSize = 16.sp,
                             modifier = Modifier.padding(0.dp)
                         )

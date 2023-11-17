@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -73,13 +74,13 @@ fun LoginScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Login", // Update text for login
+                        text = stringResource(id = R.string.login), // Update text for login
                         fontSize = 20.sp,
                         color = Color.White,
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
                     LabeledTextField(
-                        label = "Username", // Title above the text field
+                        label = stringResource(id = R.string.username), // Title above the text field
                         value = userState.value,
                         onValueChange = { userState.value = it },
                         visualTransformation = VisualTransformation.None,
@@ -94,7 +95,7 @@ fun LoginScreen(
                     )
 
                     LabeledTextField(
-                        label = "Password", // Title above the text field
+                        label = stringResource(id = R.string.password), // Title above the text field
                         value = pswState.value, // Empty string for user to input password
                         onValueChange = { pswState.value = it },
                         visualTransformation = PasswordVisualTransformation(),
@@ -118,8 +119,10 @@ fun LoginScreen(
                                     if (it == "Connection error")
                                         Toast.makeText(context,"Error!",Toast.LENGTH_LONG).show()
 
-                                    if (it == "Invalid username or password" || it == "")
-                                        Toast.makeText(context,"Contraseña o usuario invalido!",Toast.LENGTH_LONG).show()
+                                    if (it == "Invalid username or password" || it == "") {
+                                        val errorMessage = context.getString(R.string.login_error)
+                                        Toast.makeText(context, errorMessage,Toast.LENGTH_LONG).show()
+                                    }
                                 }
                             )
                         },
@@ -140,7 +143,7 @@ fun LoginScreen(
                         enabled = true
                     ) {
                         Text(
-                            text = "Login", // Change button text
+                            text = stringResource(id = R.string.login), // Change button text
                             fontSize = 16.sp,
                             modifier = Modifier.padding(0.dp)
                         )
@@ -148,9 +151,9 @@ fun LoginScreen(
 
                     Text(
                         text = buildAnnotatedString {
-                            append("¿No tienes una cuenta? ")
+                            append(stringResource(id = R.string.no_account_msg))
                             withStyle(style = SpanStyle(color = Color.Red)) {
-                                append("¡Regístrate!")
+                                append(stringResource(id = R.string.register_cta))
                             }
                         },
                         fontSize = 14.sp,

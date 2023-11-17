@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.strongify.R
@@ -84,7 +85,7 @@ fun SecuentialRoutineScreen() {
                         modifier = Modifier.fillMaxSize(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(text = "secuencial", color = Color.White)
+                        Text(text = stringResource(id = R.string.sequential), color = Color.White)
                         IconButton(
                             onClick = {
                                 dropdown = true
@@ -134,13 +135,13 @@ fun SecuentialRoutineScreen() {
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
             onClick = { /*TODO*/ }
         ) {
-            Text(text = "Proximo ejercicio")
+            Text(text = stringResource(id = R.string.next))
         }
         Button(
             //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
             onClick = { /*TODO*/ }
         ) {
-            Text(text = "Terminar")
+            Text(text = stringResource(id = R.string.finish))
         }
     }
     
