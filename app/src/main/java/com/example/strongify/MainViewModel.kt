@@ -13,13 +13,15 @@ import com.example.strongify.util.SessionManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.example.strongify.data.model.Error
+import com.example.strongify.data.repository.FavouriteRepository
 import com.example.strongify.data.repository.RoutineRepository
 
 class MainViewModel(
     sessionManager: SessionManager,
     private val userRepository: UserRepository,
     private val sportRepository: SportRepository,
-    private val routineRepository: RoutineRepository
+    private val routineRepository: RoutineRepository,
+    private val favouriteRepository: FavouriteRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MainUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
@@ -54,15 +56,22 @@ class MainViewModel(
         { state, response -> state.copy(sports = response) }
     )
 
+    fun getSport(sportId: Int) = runOnViewModelScope(
+        { sportRepository.getSport(sportId) },
+        { state, response -> state.copy(currentSport = response) }
+    )
+
     fun getRoutines() = runOnViewModelScope(
         { routineRepository.getRoutines() },
         { state, response -> state.copy(routines = response)}
     )
 
-    fun getSport(sportId: Int) = runOnViewModelScope(
-        { sportRepository.getSport(sportId) },
-        { state, response -> state.copy(currentSport = response) }
+    fun getFavorites() = runOnViewModelScope(
+        { favouriteRepository.getFavourites() },
+        { state, response -> state.copy(favorites = response) }
     )
+
+
 
     fun addOrModifySport(sport: Sport) = runOnViewModelScope(
         {

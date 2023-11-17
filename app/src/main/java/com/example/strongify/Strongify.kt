@@ -1,10 +1,12 @@
 package com.example.strongify
 
 import android.app.Application
+import com.example.strongify.data.network.FavouriteRemoteDataSource
 import com.example.strongify.data.network.RoutineRemoteDataSource
 import com.example.strongify.data.network.SportRemoteDataSource
 import com.example.strongify.data.network.UserRemoteDataSource
 import com.example.strongify.data.network.api.RetrofitClient
+import com.example.strongify.data.repository.FavouriteRepository
 import com.example.strongify.data.repository.RoutineRepository
 import com.example.strongify.data.repository.SportRepository
 import com.example.strongify.data.repository.UserRepository
@@ -21,6 +23,9 @@ class Strongify : Application() {
     private val routineRemoteDataSource: RoutineRemoteDataSource
         get() = RoutineRemoteDataSource(RetrofitClient.getApiRoutineService(this))
 
+    private val favouriteRemoteDataSource: FavouriteRemoteDataSource
+        get() = FavouriteRemoteDataSource(RetrofitClient.getApiFavouriteService(this))
+
     val sessionManager: SessionManager
         get() = SessionManager(this)
 
@@ -32,4 +37,7 @@ class Strongify : Application() {
 
     val routineRepository: RoutineRepository
         get() = RoutineRepository(routineRemoteDataSource)
+
+    val favouriteRepository: FavouriteRepository
+        get() = FavouriteRepository(favouriteRemoteDataSource)
 }

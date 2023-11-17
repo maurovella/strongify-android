@@ -45,7 +45,9 @@ fun StrongifyNavGraph(
             )
         }
         composable(Screen.FavoriteScreenClass.route) {
-            FavoriteScreen()
+            FavoriteScreen(
+                navToRoutineDetail = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/$route") }
+            )
         }
     }
 }

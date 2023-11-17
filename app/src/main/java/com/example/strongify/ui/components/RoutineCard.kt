@@ -26,15 +26,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.strongify.R
+import com.example.strongify.data.model.Routine
 
 @Composable
 fun RoutineCard(
-    category: String,
-    routineName: String,
-    difficulty: String,
+    routine: Routine,
     modifier: Modifier = Modifier
 ) {
-    val difficultyColor = when (difficulty) {
+    val difficultyColor = when (routine.difficulty) {
         "Novato", "Principiante" -> Color.Green
         "Intermedio" -> Color.Yellow
         "Avanzado" -> Color.Red
@@ -59,7 +58,7 @@ fun RoutineCard(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = routineName,
+                    text = routine.name,
                     color = Color.White,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
@@ -75,7 +74,7 @@ fun RoutineCard(
                         modifier = Modifier.clickable { /* Acción al hacer clic en el icono de información */ }
                     )
                     Text(
-                        text = difficulty,
+                        text = routine.difficulty!!,
                         color = Color.White,
                         modifier = Modifier
                             .background(difficultyColor)

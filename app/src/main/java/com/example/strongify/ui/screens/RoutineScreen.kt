@@ -58,13 +58,23 @@ fun RoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFac
                     content = {
                         //viewModel.getRoutines()
                         val routines = viewModel.uiState.routines
-                        if(routines != null){
+                        if(!routines.isNullOrEmpty()){
                             itemsIndexed(routines) { _, routine ->
                                 RoutineCard(
-                                    category = routine.category.name,
-                                    routineName = routine.name,
-                                    difficulty = routine.difficulty!!,
+                                    routine,
                                     modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) })
+                                )
+                            }
+                        } else {
+                            item {
+                                // Mensaje a mostrar cuando no hay favoritos
+                                Text(
+                                    text = "Ups! Parece que todavía no tienes rutinas!",
+                                    color = Color.White,
+                                    fontSize = 20.sp,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
                                 )
                             }
                         }
