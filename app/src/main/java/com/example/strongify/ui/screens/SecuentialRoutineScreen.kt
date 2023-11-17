@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,15 +50,17 @@ import com.example.strongify.util.getViewModelFactory
 @Composable
 fun SecuentialRoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
 routineId: Int) {
-
+    val cycleIdx = remember { mutableIntStateOf(0) }
+    val exIdx = remember { mutableIntStateOf(0) }
     var dropdown by remember {
         mutableStateOf(false)
     }
     val context = LocalContext.current.applicationContext
     LaunchedEffect(key1 = true) {
         viewModel.getRoutine(routineId = routineId)
+        viewModel.getRoutineDetail(routineId)
     }
-    if(viewModel.uiState.currentRoutine != null) {
+    if(viewModel.uiState.currentRoutine != null && viewModel.uiState.cycleDataList.isNotEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -75,6 +78,7 @@ routineId: Int) {
                 )
             }
             Text(text = viewModel.uiState.currentRoutine!!.name, color = Color.Red)
+            Text(text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName, color = Color.Red)
             Spacer(modifier = Modifier.height(20.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -129,12 +133,12 @@ routineId: Int) {
             Image(
                 painter = painterResource(R.drawable.ejercicio_1),
                 contentDescription = null,
-                modifier = Modifier.size(350.dp)
+                modifier = Modifier.size(250.dp)
             )
-            Text(text = "mucho texto", color = Color.White)
-            Text(text = "mucho texto", color = Color.White)
-            Text(text = "mucho texto", color = Color.White)
-            Text(text = "mucho texto", color = Color.White)
+            Text(text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].exercise.name , color = Color.White)
+            Text(text = "Repetitions" + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions, color = Color.White)
+            Text(text = "Tiempo estimado" + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration, color = Color.White)
+            Text(text = "Series" + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions, color = Color.White)
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
