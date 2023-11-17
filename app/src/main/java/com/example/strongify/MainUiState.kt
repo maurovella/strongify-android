@@ -4,6 +4,7 @@ import com.example.strongify.data.model.CompleteCycle
 import com.example.strongify.data.model.CompleteCycleExercise
 import com.example.strongify.data.model.CycleData
 import com.example.strongify.data.model.Error
+import com.example.strongify.data.model.Review
 import com.example.strongify.data.model.Routine
 import com.example.strongify.data.model.Sport
 import com.example.strongify.data.model.User

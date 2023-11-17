@@ -35,8 +35,8 @@ class NetworkUserReview (
     fun asModel(routineId: Int) : Review {
         return Review(
             score,
-            user.id,
             routineId,
+            review
         )
     }
 }

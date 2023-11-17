@@ -14,8 +14,10 @@ import com.example.strongify.util.SessionManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.example.strongify.data.model.Error
+import com.example.strongify.data.model.Review
 import com.example.strongify.data.repository.CyclesExercisesRepository
 import com.example.strongify.data.repository.FavouriteRepository
+import com.example.strongify.data.repository.ReviewRepository
 import com.example.strongify.data.repository.RoutineRepository
 import com.example.strongify.data.repository.RoutinesCyclesRepository
 
@@ -26,7 +28,8 @@ class MainViewModel(
     private val routineRepository: RoutineRepository,
     private val routinesCyclesRepository: RoutinesCyclesRepository,
     private val cyclesExercisesRepository: CyclesExercisesRepository,
-    private val favouriteRepository: FavouriteRepository
+    private val favouriteRepository: FavouriteRepository,
+    private val reviewRepository: ReviewRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MainUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
@@ -167,6 +170,13 @@ class MainViewModel(
         getRoutineDetail(routineId).join()
     }
 
+    fun setRate(routineId: Int, score: Int, reviewText: String) {
+        runOnViewModelScope(
+            { reviewRepository.addReview(routineId, Review(score,routineId,reviewText)) },
+            { state, response -> state.copy() }
+        )
+    }
+
     private fun <R> runOnViewModelScopeLogin(
         block: suspend () -> R,
         updateState: (MainUiState, R) -> MainUiState,
@@ -206,6 +216,8 @@ class MainViewModel(
             Error(null, e.message ?: "", null)
         }
     }
+
+
 
 
 }
