@@ -72,7 +72,7 @@ fun RegisterScreen() {
                         shape = MaterialTheme.shapes.medium,
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color(0xFF8F8E8E),
-                            textColor = Color.White
+                            //textColor = Color.White
                         ),
                     )
 
@@ -87,7 +87,7 @@ fun RegisterScreen() {
                         shape = MaterialTheme.shapes.medium,
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color(0xFF8F8E8E),
-                            textColor = Color.White
+                            //textColor = Color.White
                         ),
                     )
 
@@ -102,7 +102,7 @@ fun RegisterScreen() {
                         shape = MaterialTheme.shapes.medium,
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color(0xFF8F8E8E),
-                            textColor = Color.White
+                            //textColor = Color.White
                         ),
                     )
 

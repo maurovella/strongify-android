@@ -75,7 +75,7 @@ fun LoginScreen() {
                         shape = MaterialTheme.shapes.medium,
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color(0xFF8F8E8E),
-                            textColor = Color.White
+                            //color = Color.White
                         ),
                     )
 
@@ -90,7 +90,7 @@ fun LoginScreen() {
                         shape = MaterialTheme.shapes.medium,
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color(0xFF8F8E8E),
-                            textColor = Color.White
+                            //textColor = Color.White
                         ),
                     )
 
