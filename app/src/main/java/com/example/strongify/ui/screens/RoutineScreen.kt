@@ -62,7 +62,8 @@ fun RoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFac
                             itemsIndexed(routines) { _, routine ->
                                 RoutineCard(
                                     routine,
-                                    modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) })
+                                    modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }),
+                                    func = navToRoutineDetail
                                 )
                             }
                         } else {
@@ -81,5 +82,6 @@ fun RoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFac
                     }
                 )
             }
+                            
         }
     }

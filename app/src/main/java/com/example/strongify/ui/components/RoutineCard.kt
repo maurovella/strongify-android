@@ -31,6 +31,7 @@ import com.example.strongify.data.model.Routine
 @Composable
 fun RoutineCard(
     routine: Routine,
+    func: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val difficultyColor = when (routine.difficulty) {
@@ -71,7 +72,7 @@ fun RoutineCard(
                         imageVector = Icons.Filled.Info,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.clickable { /* Acción al hacer clic en el icono de información */ }
+                        modifier = Modifier.clickable { func(routine.id) }
                     )
                     Text(
                         text = routine.difficulty!!,

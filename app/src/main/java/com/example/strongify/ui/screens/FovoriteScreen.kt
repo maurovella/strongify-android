@@ -26,8 +26,9 @@ import com.example.strongify.ui.components.RoutineCard
 import com.example.strongify.util.getViewModelFactory
 
 @Composable
-fun FavoriteScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-                  navToRoutineDetail: (Int) -> Unit
+fun FavoriteScreen(
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    navToRoutineDetail: (Int) -> Unit
 ) {
     Surface(color = Color.Black) {
         Column(
@@ -64,7 +65,8 @@ fun FavoriteScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFa
                         itemsIndexed(favorites) { _, routine ->
                             RoutineCard(
                                 routine,
-                                modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) })
+                                modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }),
+                                func = navToRoutineDetail
                             )
                         }
                     } else {
