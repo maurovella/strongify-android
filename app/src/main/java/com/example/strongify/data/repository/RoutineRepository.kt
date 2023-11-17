@@ -11,9 +11,9 @@ class RoutineRepository (
     private val routinesMutex = Mutex()
     private var routines: List<Routine> = emptyList()
 
-    suspend fun getRoutines(refresh: Boolean = false): List<Routine> {
+    suspend fun getRoutines(): List<Routine> {
         var page = 0
-        if( refresh || routines.isEmpty()){
+        if(routines.isEmpty()){
             this.routines = emptyList()
             do {
                 val result = remoteDataSource.getRoutines(page)

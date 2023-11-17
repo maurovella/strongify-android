@@ -1,6 +1,7 @@
 package com.example.strongify
 
 import com.example.strongify.data.model.Error
+import com.example.strongify.data.model.Routine
 import com.example.strongify.data.model.Sport
 import com.example.strongify.data.model.User
 
@@ -10,7 +11,8 @@ data class MainUiState(
     val currentUser: User? = null,
     val sports: List<Sport>? = null,
     val currentSport: Sport? = null,
-    val error: Error? = null
+    val error: Error? = null,
+    val routines: List<Routine>? = null
 )
 
 val MainUiState.canGetCurrentUser: Boolean get() = isAuthenticated

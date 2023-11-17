@@ -13,11 +13,13 @@ import com.example.strongify.util.SessionManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.example.strongify.data.model.Error
+import com.example.strongify.data.repository.RoutineRepository
 
 class MainViewModel(
     sessionManager: SessionManager,
     private val userRepository: UserRepository,
-    private val sportRepository: SportRepository
+    private val sportRepository: SportRepository,
+    private val routineRepository: RoutineRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MainUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
@@ -50,6 +52,11 @@ class MainViewModel(
     fun getSports() = runOnViewModelScope(
         { sportRepository.getSports(true) },
         { state, response -> state.copy(sports = response) }
+    )
+
+    fun getRoutines() = runOnViewModelScope(
+        { routineRepository.getRoutines() },
+        { state, response -> state.copy(routines = response)}
     )
 
     fun getSport(sportId: Int) = runOnViewModelScope(

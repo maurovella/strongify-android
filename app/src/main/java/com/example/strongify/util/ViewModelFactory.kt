@@ -8,11 +8,13 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.example.strongify.data.repository.SportRepository
 import com.example.strongify.data.repository.UserRepository
 import com.example.strongify.MainViewModel
+import com.example.strongify.data.repository.RoutineRepository
 
 class ViewModelFactory constructor(
     private val sessionManager: SessionManager,
     private val userRepository: UserRepository,
     private val sportRepository: SportRepository,
+    private val routineRepository: RoutineRepository,
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
@@ -24,7 +26,7 @@ class ViewModelFactory constructor(
     ) = with(modelClass) {
         when {
             isAssignableFrom(MainViewModel::class.java) ->
-                MainViewModel(sessionManager, userRepository, sportRepository)
+                MainViewModel(sessionManager, userRepository, sportRepository, routineRepository)
 
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
