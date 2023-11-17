@@ -19,8 +19,8 @@ data class MainUiState(
     val favorites: List<Routine>? = null,
     val order: String? = "date",
     val dir: String? = "asc",
-    val routinesCycles: List<CompleteCycle>? = null,
-    val cycleExercise: List<CompleteCycleExercise>? = null,
+    val routinesCycles: List<CompleteCycle> = emptyList(),
+    val cycleExercise: List<CompleteCycleExercise> = emptyList(),
     var cycleDataList: List<CycleData> = emptyList(),
     val currentRoutine: Routine? = null
 )

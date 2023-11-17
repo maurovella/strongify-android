@@ -83,18 +83,18 @@ class MainViewModel(
     }
 
     fun getRoutineCycles(routineId: Int) = runOnViewModelScope(
-        { routinesCyclesRepository.getRoutineCycles(routineId) },
+        { routinesCyclesRepository.getRoutineCycles(routineId, true) },
         { state, response -> state.copy( routinesCycles = response) }
     )
 
     fun getCycleExercises(cycleId: Int) = runOnViewModelScope(
-        { cyclesExercisesRepository.getCycleExercises(cycleId) },
+        { cyclesExercisesRepository.getCycleExercises(cycleId, true) },
         { state, response -> state.copy( cycleExercise = response) }
     )
 
     fun getRoutineDetail(routineId: Int) = runOnViewModelScope(
         { getRoutineCycles(routineId).join()
-            for(cycle in uiState.routinesCycles!!) {
+            for(cycle in uiState.routinesCycles) {
                 getCycleExercises(cycle.id).join()
 
                 uiState.cycleDataList = uiState.cycleDataList.plus(CycleData(cycle.name, cycle.repetitions, uiState.cycleExercise!!))
@@ -155,15 +155,16 @@ class MainViewModel(
         getFavorites()
     }
 
-    fun getRoutine(routineId: Int) {
+    suspend fun getRoutine(routineId: Int) {
         runOnViewModelScope(
-        { routineRepository.getRoutine(routineId) },
+            { routineRepository.getRoutine(routineId) },
             { state, response ->
                 state.copy(
                     currentRoutine = response
                 )
             }
         )
+        getRoutineDetail(routineId).join()
     }
 
     private fun <R> runOnViewModelScopeLogin(

@@ -58,7 +58,6 @@ routineId: Int) {
     val context = LocalContext.current.applicationContext
     LaunchedEffect(key1 = true) {
         viewModel.getRoutine(routineId = routineId)
-        viewModel.getRoutineDetail(routineId)
     }
     if(viewModel.uiState.currentRoutine != null && viewModel.uiState.cycleDataList.isNotEmpty()) {
         Column(
