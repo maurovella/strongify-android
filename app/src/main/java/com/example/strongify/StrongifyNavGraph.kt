@@ -1,6 +1,8 @@
 package com.example.strongify
 
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,11 +14,14 @@ import com.example.strongify.ui.screens.RegisterScreen
 import com.example.strongify.ui.screens.RoutineDetailScreen
 import com.example.strongify.ui.screens.RoutineScreen
 import com.example.strongify.ui.screens.Screen
+import com.example.strongify.ui.screens.SecuentialRoutineScreen
+import com.example.strongify.util.getViewModelFactory
 
 @Composable
 fun StrongifyNavGraph(
     navController: NavHostController = rememberNavController(),
-    startDestination: String = Screen.LoginScreenClass.route
+    startDestination: String = Screen.LoginScreenClass.route,
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
 ) {
     NavHost(
         navController = navController,
@@ -39,8 +44,8 @@ fun StrongifyNavGraph(
                 navToRoutineDetail = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/$route") }
             )
         }
-        composable(Screen.RoutineDetailScreenClass.route) {
-            RoutineDetailScreen(
+        composable(Screen.SecuentialRoutineScreenClass.route) {
+            SecuentialRoutineScreen(
                 routineId = it.arguments?.getString("routineId")?.toInt() ?: 0
             )
         }

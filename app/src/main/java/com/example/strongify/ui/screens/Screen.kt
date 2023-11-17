@@ -37,6 +37,12 @@ sealed class Screen(
         icon = Icons.Filled.Build,
         route = "routines/{routineId}"
     )
+
+    object SecuentialRoutineScreenClass: Screen(
+        title = "Secuential Routine",
+        icon = Icons.Filled.Build,
+        route = "routines/{routineId}"
+    )
     object FavoriteScreenClass: Screen(
         title = "Favorite",
         icon = Icons.Filled.Favorite,

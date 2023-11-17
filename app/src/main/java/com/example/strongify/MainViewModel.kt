@@ -84,12 +84,12 @@ class MainViewModel(
 
     fun getRoutineCycles(routineId: Int) = runOnViewModelScope(
         { routinesCyclesRepository.getRoutineCycles(routineId) },
-        { state, response -> state.copy( isFetching = false, routinesCycles = response) }
+        { state, response -> state.copy( routinesCycles = response) }
     )
 
     fun getCycleExercises(cycleId: Int) = runOnViewModelScope(
         { cyclesExercisesRepository.getCycleExercises(cycleId) },
-        { state, response -> state.copy( isFetching = false, cycleExercise = response) }
+        { state, response -> state.copy( cycleExercise = response) }
     )
 
     fun getRoutineDetail(routineId: Int) = runOnViewModelScope(
@@ -100,7 +100,7 @@ class MainViewModel(
                 uiState.cycleDataList = uiState.cycleDataList.plus(CycleData(cycle.name, cycle.repetitions, uiState.cycleExercise!!))
             }
         },
-        { state, response -> state.copy(isFetching = false) }
+        { state, response -> state.copy() }
     )
 
     fun getFavorites() {
@@ -139,9 +139,7 @@ class MainViewModel(
         runOnViewModelScope(
             { favouriteRepository.markFavourite(routineId = routineId) },
             { state, response ->
-                state.copy(
-                    isFetching = false
-                )
+                state.copy()
             }
         )
         getFavorites()
@@ -151,12 +149,21 @@ class MainViewModel(
         runOnViewModelScope(
             { favouriteRepository.removeFavourite(routineId) },
             { state, response ->
-                state.copy(
-                    isFetching = false
-                )
+                state.copy()
             }
         )
         getFavorites()
+    }
+
+    fun getRoutine(routineId: Int) {
+        runOnViewModelScope(
+        { routineRepository.getRoutine(routineId) },
+            { state, response ->
+                state.copy(
+                    currentRoutine = response
+                )
+            }
+        )
     }
 
     private fun <R> runOnViewModelScopeLogin(
@@ -198,4 +205,6 @@ class MainViewModel(
             Error(null, e.message ?: "", null)
         }
     }
+
+
 }
