@@ -32,6 +32,8 @@ fun RoutineCard(
     category: String,
     routineName: String,
     difficulty: String,
+    routineId: Int,
+    func: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val difficultyColor = when (difficulty) {
@@ -72,7 +74,7 @@ fun RoutineCard(
                         imageVector = Icons.Filled.Info,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.clickable { /* Acción al hacer clic en el icono de información */ }
+                        modifier = Modifier.clickable { func(routineId) }
                     )
                     Text(
                         text = difficulty,

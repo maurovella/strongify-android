@@ -53,7 +53,9 @@ fun RoutineScreen(
                         RoutineCard(
                             category = routine.category,
                             routineName = routine.routineName,
+                            routineId = routine.routineId,
                             difficulty = routine.difficulty,
+                            func = navToRoutineDetail,
                             modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.routineId) })
                         )
                     }
