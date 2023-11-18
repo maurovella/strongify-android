@@ -30,7 +30,8 @@ fun FavoriteScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     navToRoutineDetail: (Int) -> Unit
 ) {
-    Surface(color = Color.Black) {
+    val fondo = Color(0xFF1C2120)
+    Surface(color = fondo) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {

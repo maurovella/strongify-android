@@ -403,6 +403,11 @@ fun RateDialog(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
+                            onClick = onCancel
+                        ) {
+                            Text(text = "Cancelar")
+                        }
+                        Button(
                             onClick = {
                                 onConfirm()
                                 if(score != "")
@@ -412,11 +417,7 @@ fun RateDialog(
                         ) {
                             Text(text = "Confirmar")
                         }
-                        Button(
-                            onClick = onCancel
-                        ) {
-                            Text(text = "Cancelar")
-                        }
+
                     }
                 }
             }

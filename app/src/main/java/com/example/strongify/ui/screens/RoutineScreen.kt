@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -43,7 +44,8 @@ fun RoutineScreen(
         mutableStateOf(false)
     }
     val context = LocalContext.current.applicationContext
-    Surface(color = Color.Black) {
+    val fondo = Color(0xFF1C2120)
+    Surface(color = fondo) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -71,9 +73,17 @@ fun RoutineScreen(
                 ){
                     Box(
                         modifier = Modifier
-                            .background(Color.Red)
-                            .height(60.dp)
-                            .width(100.dp)
+                            .background(
+                                color = Color.Red,
+                                shape = RoundedCornerShape(
+                                    topStart = 16.dp,
+                                    bottomStart = 16.dp,
+                                    topEnd = 0.dp,
+                                    bottomEnd = 0.dp
+                                )
+                            )
+                            .height(40.dp)
+                            .width(120.dp)
                             .clickable { dropdown = true }
                     ) {
                         Column(
@@ -86,7 +96,8 @@ fun RoutineScreen(
                             ) {
                                 Text(
                                     text = stringResource(id = R.string.orderBy),
-                                    color = Color.White
+                                    color = Color.White,
+                                    modifier = Modifier.padding(start = 8.dp)
                                 )
                                 IconButton(
                                     onClick = {
@@ -156,7 +167,7 @@ fun RoutineScreen(
                     val routines = viewModel.uiState.routines
                     val favorites = viewModel.uiState.favorites
                     if(!routines.isNullOrEmpty()){
-                        itemsIndexed(routines) { _, routine ->
+                        itemsIndexed(routines) { index, routine ->
                             val isFaved = favorites?.any { it.id == routine.id } ?: false
                             RoutineCard(
                                 viewModel,
@@ -165,7 +176,16 @@ fun RoutineScreen(
                                 modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }),
                                 func = navToRoutineDetail
                             )
+                            if (index == routines.size - 1) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                        .background(fondo)
+                                )
+                            }
                         }
+
                     } else {
                         item {
                             // Mensaje a mostrar cuando no hay favoritos
@@ -179,6 +199,7 @@ fun RoutineScreen(
                             )
                         }
                     }
+
                 }
             )
         }

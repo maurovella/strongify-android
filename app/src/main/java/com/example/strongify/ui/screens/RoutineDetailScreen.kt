@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,11 +16,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -61,7 +65,10 @@ fun RoutineDetailScreen(
     nav: (Int) -> Unit
 ) {
     val cycleIdx = remember { mutableIntStateOf(0) }
+    val review = remember { mutableStateOf(false) }
     val exIdx = remember { mutableIntStateOf(0) }
+    val fondo = Color(0xFF1C2120)
+    val execution = remember { mutableStateOf(false) }
     var dropdown by remember {
         mutableStateOf(false)
     }
@@ -97,9 +104,20 @@ fun RoutineDetailScreen(
             }*/
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black),
+                .background(fondo),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Row( modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.clickable { /* Acción al presionar la flecha */ }
+                )
+            }
             Text(
                 text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
                 color = Color.Red,
@@ -114,17 +132,27 @@ fun RoutineDetailScreen(
                 fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
                 fontWeight = FontWeight.Bold,
             )
+            Spacer(modifier = Modifier.height(7.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
                 Box(
                     modifier = Modifier
-                        .background(Color.Red)
-                        .height(60.dp)
-                        .width(100.dp)
+                        .background(
+                            color = Color.Red,
+                            shape = RoundedCornerShape(
+                                topStart = 16.dp,
+                                bottomStart = 16.dp,
+                                topEnd = 0.dp,
+                                bottomEnd = 0.dp
+                            )
+                        )
+                        .height(40.dp)
+                        .width(120.dp)
                         .clickable { dropdown = true }
                 ) {
+
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -135,7 +163,8 @@ fun RoutineDetailScreen(
                         ) {
                             Text(
                                 text = stringResource(id = R.string.list),
-                                color = Color.White
+                                color = Color.White,
+                                modifier = Modifier.padding(start = 8.dp)
                             )
                             IconButton(
                                 onClick = {
@@ -163,10 +192,38 @@ fun RoutineDetailScreen(
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                if (!execution.value) {
+                    Button(
+                        //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                        onClick = {
+                            execution.value = !execution.value
+                            exIdx.intValue = 0
+                            cycleIdx.intValue = 0
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = stringResource(id = R.string.start_routine))
+                    }
+                }
+                else {
+                    Button(
+                        //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                        onClick = {
+                            review.value = true
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = stringResource(id = R.string.finish))
+                    }
+                }
+            }
             LazyColumn {
                 val cycles = viewModel.uiState.cycleDataList
 
-                itemsIndexed(cycles) { _, cycle ->
+                itemsIndexed(cycles) { index, cycle ->
                     // Render cycle information
                     Text(
                         text = cycle.cycleName,
@@ -174,21 +231,81 @@ fun RoutineDetailScreen(
                         fontSize = 24.sp,
                         fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
                         fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 16.dp)
                     )
 
                     // Render exercises for the current cycle
                     val cycleExercises = cycle.cycleExercises
                     for (exerciseIndex in cycleExercises.indices) {
                         val exercise = cycleExercises[exerciseIndex]
-                        ExerciseCard(
-                            name = exercise.exercise.name,
-                            repetitions = exercise.repetitions!!,
-                            series = cycle.cycleRepetitions
-                        )
+                        Column() {
+                            Row() {
+                                ExerciseCard(
+                                    name = exercise.exercise.name,
+                                    repetitions = exercise.repetitions!!,
+                                    series = cycle.cycleRepetitions
+                                )
+
+                            }
+                            val current_serie = remember { mutableIntStateOf(1) }
+                            if(execution.value) {
+                                Row() {
+                                    Text(
+                                        text = "Serie actual:  " + current_serie.intValue,
+                                        color = Color.LightGray,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp,
+                                        modifier = Modifier.padding(start = 8.dp, top = 10.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Button(onClick = {
+                                        if(current_serie.intValue > 1) {
+                                            current_serie.intValue--
+                                        }
+                                    },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                                        Text(text = "-", fontSize = 16.sp)
+                                    }
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Button(onClick = {
+                                        if(current_serie.intValue < cycle.cycleRepetitions) {
+                                            current_serie.intValue++
+                                        }
+                                    },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                                        Text(text = "+", fontSize = 16.sp)
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            if (index == cycles.size - 1 && exerciseIndex == cycleExercises.size - 1) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                        .background(fondo)
+                                )
+                            }
+                        }
                     }
                 }
             }
-
+            if (review.value) {
+                RateDialog( modifier = Modifier
+                    .width(300.dp) // Ancho del diálogo
+                    .height(400.dp),
+                    onConfirm = {
+                        // Acciones al confirmar el diálogo
+                        // Ejemplo: enviar valor o ejecutar alguna acción
+                        review.value = false // Cierra el diálogo
+                        execution.value = !execution.value
+                    },
+                    onCancel = {
+                        // Acciones al cancelar el diálogo
+                        review.value = false // Cierra el diálogo
+                    },
+                    viewModel,
+                    routineId
+                ) // Alto del diálogo)
+            }
         }
     } else {
         // Loading or empty state UI

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.strongify.R
@@ -53,39 +54,24 @@ fun ExerciseCard(
             ) {
                 Text(
                     text = name,
-                    color = Color.White,
+                    color = Color.LightGray,
+                    textAlign = TextAlign.Start,
                     fontSize = 20.sp,
                     fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = "Repetitions: $repetitions",
-                    color = Color.White,
+                    color = Color.LightGray,textAlign = TextAlign.Start,
                     fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
                     fontWeight = FontWeight.Bold
                     )
                 Text(
                     text = "Series: $series",
-                    color = Color.White,
+                    color = Color.LightGray,textAlign = TextAlign.Start,
                     fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
                     fontWeight = FontWeight.Bold
                 )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    //Text(text = "Current Series: $currentSerie", color = Color.White)
-                    Button(
-                        onClick = { /*TODO*/}
-                    ) {
-                        Text(
-                            text = "Finish series",
-                            color = Color.White,
-                            fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
 
             }
         }
