@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -41,14 +42,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,6 +64,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.util.getViewModelFactory
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,6 +79,8 @@ fun SecuentialRoutineScreen(
     val execution = remember { mutableStateOf(false) }
     val cycleIdx = remember { mutableIntStateOf(0) }
     val exIdx = remember { mutableIntStateOf(0) }
+    val current_serie = remember { mutableIntStateOf(1) }
+    val fondo = Color(0xFF1C2120)
     var dropdown by remember {
         mutableStateOf(false)
     }
@@ -83,7 +92,7 @@ fun SecuentialRoutineScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black),
+                .background(fondo),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -96,18 +105,23 @@ fun SecuentialRoutineScreen(
                     tint = Color.White,
                 )
             }
-            Text(text = viewModel.uiState.currentRoutine!!.name, color = Color.Red)
-            Text(text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName, color = Color.Red)
-            Spacer(modifier = Modifier.height(20.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
                 Box(
                     modifier = Modifier
-                        .background(Color.Red)
-                        .height(60.dp)
-                        .width(100.dp)
+                        .background(
+                            color = Color.Red,
+                            shape = RoundedCornerShape(
+                                topStart = 16.dp,
+                                bottomStart = 16.dp,
+                                topEnd = 0.dp,
+                                bottomEnd = 0.dp
+                            )
+                        )
+                        .height(40.dp)
+                        .width(120.dp)
                         .clickable { dropdown = true }
                 ) {
                     Column(
@@ -120,7 +134,9 @@ fun SecuentialRoutineScreen(
                         ) {
                             Text(
                                 text = stringResource(id = R.string.sequential),
-                                color = Color.White
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 8.dp)
                             )
                             IconButton(
                                 onClick = {
@@ -148,25 +164,75 @@ fun SecuentialRoutineScreen(
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
+                color = Color.Red,
+                fontSize = 32.sp,
+                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontWeight = FontWeight.Bold,
+            )
+
+            Text(
+                text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName,
+                color = Color.Red,
+                fontSize = 20.sp, // Tamaño de la fuente
+                fontWeight = FontWeight.Bold, // Puedes ajustar el peso de la fuente según lo deseado
+                fontFamily = FontFamily.SansSerif // Cambia por la fuente que prefieras, como FontFamily.SansSerif, FontFamily.Cursive, etc.
+            )
+
+
             Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(R.drawable.ejercicio_1),
                 contentDescription = null,
-                modifier = Modifier.size(250.dp)
+                modifier = Modifier
+                    .size(200.dp)
+                    .clip(shape = RoundedCornerShape(50.dp))
             )
-            Text(text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].exercise.name , color = Color.White)
-            Text(text = "Repetitions" + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions, color = Color.White)
-            Text(text = "Tiempo estimado" + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration, color = Color.White)
-            Text(text = "Series" + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions, color = Color.White)
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "-")
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].exercise.name.toUpperCase(), // Convierte el texto a mayúsculas
+                color = Color.White,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(text = "Repetitions:                        ".toUpperCase() + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions, color = Color.LightGray,
+                textAlign = TextAlign.Start)
+            Spacer(modifier = Modifier.height(3.dp))
+            Text(text = "Tiempo estimado:              ".toUpperCase() + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration, color = Color.LightGray,
+                textAlign = TextAlign.Start)
+            Spacer(modifier = Modifier.height(3.dp))
+            Text(text = "Series:                                   ".toUpperCase() + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions, color = Color.LightGray,textAlign = TextAlign.Start)
+            Spacer(modifier = Modifier.height(10.dp))
+            if(execution.value) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Serie actual: ".toUpperCase() + current_serie.intValue , color = Color.White, fontSize = 20.sp)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Button(onClick = {
+                        if(current_serie.intValue > 1) {
+                            current_serie.intValue--
+                        }
+                    },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                        Text(text = "-")
+                    }
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Button(onClick = {
+                        if(current_serie.intValue < viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions) {
+                            current_serie.intValue++
+                        }
+                    },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                        Text(text = "+")
+                    }
                 }
-                Text(text = "mucho texto", color = Color.White)
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "+")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CountdownTimer( viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration!!)
                 }
             }
             Row(
@@ -174,13 +240,14 @@ fun SecuentialRoutineScreen(
             ) {
                 if( !( cycleIdx.intValue == 0 && exIdx.intValue == 0 ))
                     Button(onClick = {
+                            current_serie.intValue = 1
                             if (exIdx.intValue == 0) {
                                 cycleIdx.intValue--
                                 exIdx.intValue = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size -1
                             } else {
                                 exIdx.intValue--
                             }
-                        }
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                     ) {
                         Text(text = stringResource(id = R.string.previous))
                     }
@@ -188,6 +255,7 @@ fun SecuentialRoutineScreen(
                     Button(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         onClick = {
+                            current_serie.intValue = 1
                             if (viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size - 1 == exIdx.intValue) {
                                 exIdx.intValue = 0
                                 cycleIdx.intValue++
@@ -200,6 +268,7 @@ fun SecuentialRoutineScreen(
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(5.dp))
             if (!execution.value) {
                 Button(
                     //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
@@ -207,7 +276,7 @@ fun SecuentialRoutineScreen(
                         execution.value = !execution.value
                         exIdx.intValue = 0
                         cycleIdx.intValue = 0
-                    }
+                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {
                     Text(text = stringResource(id = R.string.start_routine))
                 }
@@ -217,7 +286,7 @@ fun SecuentialRoutineScreen(
                     //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
                     onClick = {
                         review.value = true
-                    }
+                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {
                     Text(text = stringResource(id = R.string.finish))
                 }
@@ -354,4 +423,42 @@ fun RateDialog(
         }
     )
 }
+
+@Composable
+fun CountdownTimer(time: Int) {
+    var time by remember { mutableStateOf(time*60) }
+    var isRunning by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isRunning) {
+        if (isRunning) {
+            while (time > 0) {
+                delay(1000)
+                time--
+            }
+        }
+    }
+
+    val minutes = time / 60
+    val seconds = time % 60
+
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "%02d:%02d".format(minutes, seconds), fontSize = 32.sp, color = Color.White)
+
+            Button(
+                onClick = { isRunning = !isRunning }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+            ) {
+                Text(text = if (isRunning) "Pausar" else "Iniciar")
+            }
+        }
+    }
+}
+
 
