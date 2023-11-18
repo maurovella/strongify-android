@@ -39,7 +39,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel) {
+private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -71,7 +71,7 @@ fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel) {
 }
 
 @Composable
-fun TabletLayout(uiState: MainUiState, viewModel: MainViewModel) {
+private fun TabletLayout(uiState: MainUiState, viewModel: MainViewModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
