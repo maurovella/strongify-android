@@ -128,6 +128,7 @@ fun RoutineCard(
                 .fillMaxWidth()
                 .aspectRatio(1.5f) // Proporción más ancha que larga
                 .clip(shape = RoundedCornerShape(8.dp))
+                .clickable { func(routine.id) }
         )
     }
 }

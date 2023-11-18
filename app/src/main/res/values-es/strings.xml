@@ -30,4 +30,5 @@
     <string name="reps">Repeticiones:                        </string>
     <string name="est_time">Tiempo estimado:              </string>
     <string name="curr_series">Serie actual: </string>
+    <string name="list">Listado</string>
 </resources>

@@ -29,4 +29,5 @@
     <string name="reps">Repetitions:</string>
     <string name="est_time">Estimated time:</string>
     <string name="curr_series">Current series: </string>
+    <string name="list">Listed</string>
 </resources>

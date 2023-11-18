@@ -63,14 +63,18 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
-import com.example.strongify.data.model.Routine
 import com.example.strongify.util.getViewModelFactory
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-//@Preview
 @Composable
-fun SecuentialRoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-routineId: Int) {
+fun SecuentialRoutineScreen(
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    routineId: Int,
+    nav: (Int) -> Unit
+) {
     val review = remember { mutableStateOf(false) }
     val execution = remember { mutableStateOf(false) }
     val cycleIdx = remember { mutableIntStateOf(0) }
@@ -150,9 +154,9 @@ routineId: Int) {
                                 onDismissRequest = { dropdown = false })
                             {
                                 DropdownMenuItem(
-                                    text = { Text(text = "hola") },
+                                    text = { Text(text = stringResource(id = R.string.list)) },
                                     onClick = {
-                                        Toast.makeText(context, "messi", Toast.LENGTH_LONG).show()
+                                        nav(routineId)
                                     }
                                 )
                             }
@@ -452,6 +456,11 @@ fun RateDialog(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
+                            onClick = onCancel
+                        ) {
+                            Text(text = "Cancelar")
+                        }
+                        Button(
                             onClick = {
                                 onConfirm()
                                 if(score != "")
@@ -461,11 +470,7 @@ fun RateDialog(
                         ) {
                             Text(text = "Confirmar")
                         }
-                        Button(
-                            onClick = onCancel
-                        ) {
-                            Text(text = "Cancelar")
-                        }
+
                     }
                 }
             }
