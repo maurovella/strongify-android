@@ -17,4 +17,13 @@
     <string name="sequential">Sequential</string>
     <string name="next">Next exercise</string>
     <string name="finish">Finish</string>
+    <string name="previous">Previous exercise</string>
+    <string name="start_routine">Start routine</string>
+    <string name="orderBy">Order by</string>
+    <string name="date_desc">Date desc</string>
+    <string name="date_asc">Date asc</string>
+    <string name="score_desc">Score desc</string>
+    <string name="score_asc">Score asc</string>
+    <string name="diff_desc">Difficulty desc</string>
+    <string name="diff_asc">Difficulty asc</string>
 </resources>

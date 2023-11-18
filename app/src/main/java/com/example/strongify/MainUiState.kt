@@ -4,6 +4,7 @@ import com.example.strongify.data.model.CompleteCycle
 import com.example.strongify.data.model.CompleteCycleExercise
 import com.example.strongify.data.model.CycleData
 import com.example.strongify.data.model.Error
+import com.example.strongify.data.model.Review
 import com.example.strongify.data.model.Routine
 import com.example.strongify.data.model.Sport
 import com.example.strongify.data.model.User
@@ -19,8 +20,8 @@ data class MainUiState(
     val favorites: List<Routine>? = null,
     val order: String? = "date",
     val dir: String? = "asc",
-    val routinesCycles: List<CompleteCycle>? = null,
-    val cycleExercise: List<CompleteCycleExercise>? = null,
+    val routinesCycles: List<CompleteCycle> = emptyList(),
+    val cycleExercise: List<CompleteCycleExercise> = emptyList(),
     var cycleDataList: List<CycleData> = emptyList(),
     val currentRoutine: Routine? = null
 )

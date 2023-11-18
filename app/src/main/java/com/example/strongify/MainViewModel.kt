@@ -14,8 +14,10 @@ import com.example.strongify.util.SessionManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.example.strongify.data.model.Error
+import com.example.strongify.data.model.Review
 import com.example.strongify.data.repository.CyclesExercisesRepository
 import com.example.strongify.data.repository.FavouriteRepository
+import com.example.strongify.data.repository.ReviewRepository
 import com.example.strongify.data.repository.RoutineRepository
 import com.example.strongify.data.repository.RoutinesCyclesRepository
 
@@ -26,7 +28,8 @@ class MainViewModel(
     private val routineRepository: RoutineRepository,
     private val routinesCyclesRepository: RoutinesCyclesRepository,
     private val cyclesExercisesRepository: CyclesExercisesRepository,
-    private val favouriteRepository: FavouriteRepository
+    private val favouriteRepository: FavouriteRepository,
+    private val reviewRepository: ReviewRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MainUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
@@ -83,18 +86,18 @@ class MainViewModel(
     }
 
     fun getRoutineCycles(routineId: Int) = runOnViewModelScope(
-        { routinesCyclesRepository.getRoutineCycles(routineId) },
+        { routinesCyclesRepository.getRoutineCycles(routineId, true) },
         { state, response -> state.copy( routinesCycles = response) }
     )
 
     fun getCycleExercises(cycleId: Int) = runOnViewModelScope(
-        { cyclesExercisesRepository.getCycleExercises(cycleId) },
+        { cyclesExercisesRepository.getCycleExercises(cycleId, true) },
         { state, response -> state.copy( cycleExercise = response) }
     )
 
     fun getRoutineDetail(routineId: Int) = runOnViewModelScope(
         { getRoutineCycles(routineId).join()
-            for(cycle in uiState.routinesCycles!!) {
+            for(cycle in uiState.routinesCycles) {
                 getCycleExercises(cycle.id).join()
 
                 uiState.cycleDataList = uiState.cycleDataList.plus(CycleData(cycle.name, cycle.repetitions, uiState.cycleExercise!!))
@@ -155,14 +158,22 @@ class MainViewModel(
         getFavorites()
     }
 
-    fun getRoutine(routineId: Int) {
+    suspend fun getRoutine(routineId: Int) {
         runOnViewModelScope(
-        { routineRepository.getRoutine(routineId) },
+            { routineRepository.getRoutine(routineId) },
             { state, response ->
                 state.copy(
                     currentRoutine = response
                 )
             }
+        )
+        getRoutineDetail(routineId).join()
+    }
+
+    fun setRate(routineId: Int, score: Int, reviewText: String) {
+        runOnViewModelScope(
+            { reviewRepository.addReview(routineId, Review(score,routineId,reviewText)) },
+            { state, response -> state.copy() }
         )
     }
 
@@ -205,6 +216,8 @@ class MainViewModel(
             Error(null, e.message ?: "", null)
         }
     }
+
+
 
 
 }

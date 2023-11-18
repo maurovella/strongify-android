@@ -23,7 +23,7 @@ import com.example.strongify.R
 
 @Preview
 @Composable
-fun RateDialog() {
+fun RateScreen() {
     var value by remember {
         mutableStateOf("")
     }

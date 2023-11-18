@@ -10,6 +10,7 @@ import com.example.strongify.data.repository.UserRepository
 import com.example.strongify.MainViewModel
 import com.example.strongify.data.repository.CyclesExercisesRepository
 import com.example.strongify.data.repository.FavouriteRepository
+import com.example.strongify.data.repository.ReviewRepository
 import com.example.strongify.data.repository.RoutineRepository
 import com.example.strongify.data.repository.RoutinesCyclesRepository
 
@@ -21,6 +22,7 @@ class ViewModelFactory constructor(
     private val favouriteRepository: FavouriteRepository,
     private val routinesCyclesRepository: RoutinesCyclesRepository,
     private val cyclesExercisesRepository: CyclesExercisesRepository,
+    private val reviewRepository: ReviewRepository,
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
@@ -32,7 +34,7 @@ class ViewModelFactory constructor(
     ) = with(modelClass) {
         when {
             isAssignableFrom(MainViewModel::class.java) ->
-                MainViewModel(sessionManager, userRepository, sportRepository, routineRepository, routinesCyclesRepository, cyclesExercisesRepository, favouriteRepository)
+                MainViewModel(sessionManager, userRepository, sportRepository, routineRepository, routinesCyclesRepository, cyclesExercisesRepository, favouriteRepository, reviewRepository)
 
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
