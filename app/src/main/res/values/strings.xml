@@ -26,4 +26,7 @@
     <string name="score_asc">Score asc</string>
     <string name="diff_desc">Difficulty desc</string>
     <string name="diff_asc">Difficulty asc</string>
+    <string name="reps">Repetitions:</string>
+    <string name="est_time">Estimated time:</string>
+    <string name="curr_series">Current series: </string>
 </resources>

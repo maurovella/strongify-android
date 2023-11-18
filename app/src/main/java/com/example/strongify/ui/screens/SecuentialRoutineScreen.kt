@@ -195,19 +195,72 @@ routineId: Int) {
                 fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(20.dp))
-            Text(text = "Repetitions:                        ".toUpperCase() + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions, color = Color.LightGray,
-                textAlign = TextAlign.Start)
-            Spacer(modifier = Modifier.height(3.dp))
-            Text(text = "Tiempo estimado:              ".toUpperCase() + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration, color = Color.LightGray,
-                textAlign = TextAlign.Start)
-            Spacer(modifier = Modifier.height(3.dp))
-            Text(text = "Series:                                   ".toUpperCase() + viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions, color = Color.LightGray,textAlign = TextAlign.Start)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.reps).uppercase(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions.toString(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.est_time).uppercase(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration.toString(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Series:".uppercase(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions.toString(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(10.dp))
+
             if(execution.value) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Serie actual: ".toUpperCase() + current_serie.intValue , color = Color.White, fontSize = 20.sp)
+                    Text(text = stringResource(id = R.string.curr_series).uppercase() + current_serie.intValue , color = Color.White, fontSize = 20.sp)
                     Spacer(modifier = Modifier.width(10.dp))
                     Button(onClick = {
                         if(current_serie.intValue > 1) {
