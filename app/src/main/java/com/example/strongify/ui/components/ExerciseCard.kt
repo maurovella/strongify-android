@@ -29,8 +29,17 @@ fun ExerciseCard(
     name: String,
     repetitions: Int,
     series: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isPhone: Boolean = true
 ) {
+    var fontSize = 12.sp
+    var titleFontSize = 20.sp
+    var imageSize = 150.dp
+    if (!isPhone) {
+        fontSize = 24.sp
+        titleFontSize = 36.sp
+        imageSize = 220.dp
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,7 +54,7 @@ fun ExerciseCard(
             Image(
                 painter = painterResource(R.drawable.ejercicio_1),
                 contentDescription = null,
-                modifier = Modifier.size(150.dp)
+                modifier = Modifier.size(imageSize)
             )
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -56,7 +65,7 @@ fun ExerciseCard(
                     text = name,
                     color = Color.LightGray,
                     textAlign = TextAlign.Start,
-                    fontSize = 20.sp,
+                    fontSize = titleFontSize,
                     fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
                     fontWeight = FontWeight.Bold
                 )
@@ -64,13 +73,15 @@ fun ExerciseCard(
                     text = "Repetitions: $repetitions",
                     color = Color.LightGray,textAlign = TextAlign.Start,
                     fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontSize = fontSize
                     )
                 Text(
                     text = "Series: $series",
                     color = Color.LightGray,textAlign = TextAlign.Start,
                     fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontSize = fontSize
                 )
 
             }

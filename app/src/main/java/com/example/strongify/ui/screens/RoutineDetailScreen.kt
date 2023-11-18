@@ -31,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -64,6 +65,21 @@ fun RoutineDetailScreen(
     routineId: Int,
     nav: (Int) -> Unit,
     isPhone: Boolean = true
+) {
+    Surface {
+        if (isPhone) {
+            PhoneLayout(viewModel = viewModel, routineId, nav)
+        } else {
+            TabletLayout(viewModel = viewModel, routineId, nav)
+        }
+    }
+}
+
+@Composable
+private fun PhoneLayout(
+    viewModel: MainViewModel,
+    routineId: Int,
+    nav: (Int) -> Unit
 ) {
     val cycleIdx = remember { mutableIntStateOf(0) }
     val review = remember { mutableStateOf(false) }
@@ -273,6 +289,245 @@ fun RoutineDetailScreen(
                                         }
                                     },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
                                         Text(text = "+", fontSize = 16.sp)
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            if (index == cycles.size - 1 && exerciseIndex == cycleExercises.size - 1) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                        .background(fondo)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            if (review.value) {
+                RateDialog( modifier = Modifier
+                    .width(300.dp) // Ancho del diálogo
+                    .height(400.dp),
+                    onConfirm = {
+                        // Acciones al confirmar el diálogo
+                        // Ejemplo: enviar valor o ejecutar alguna acción
+                        review.value = false // Cierra el diálogo
+                        execution.value = !execution.value
+                    },
+                    onCancel = {
+                        // Acciones al cancelar el diálogo
+                        review.value = false // Cierra el diálogo
+                    },
+                    viewModel,
+                    routineId
+                ) // Alto del diálogo)
+            }
+        }
+    } else {
+        // Loading or empty state UI
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator() // or some other indication of loading or empty state
+        }
+    }
+}
+
+@Composable
+private fun TabletLayout(
+    viewModel: MainViewModel,
+    routineId: Int,
+    nav: (Int) -> Unit
+) {
+    val cycleIdx = remember { mutableIntStateOf(0) }
+    val review = remember { mutableStateOf(false) }
+    val exIdx = remember { mutableIntStateOf(0) }
+    val fondo = Color(0xFF1C2120)
+    val execution = remember { mutableStateOf(false) }
+    var dropdown by remember {
+        mutableStateOf(false)
+    }
+
+    val context = LocalContext.current.applicationContext
+
+    LaunchedEffect(key1 = true) {
+        viewModel.getRoutine(routineId = routineId)
+    }
+
+    if (viewModel.uiState.currentRoutine != null && viewModel.uiState.cycleDataList.isNotEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(fondo),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row( modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.clickable { /* Acción al presionar la flecha */ }
+                )
+            }
+            Text(
+                text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
+                color = Color.Red,
+                fontSize = 50.sp,
+                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName,
+                color = Color.Red,
+                fontSize = 38.sp,
+                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.height(7.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = Color.Red,
+                            shape = RoundedCornerShape(
+                                topStart = 16.dp,
+                                bottomStart = 16.dp,
+                                topEnd = 0.dp,
+                                bottomEnd = 0.dp
+                            )
+                        )
+                        .height(60.dp)
+                        .width(140.dp)
+                        .clickable { dropdown = true }
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.list),
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 8.dp),
+                                fontSize = 20.sp
+                            )
+                            IconButton(
+                                onClick = {
+                                    dropdown = true
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.KeyboardArrowDown,
+                                    contentDescription = "",
+                                    tint = Color.White
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = dropdown,
+                                onDismissRequest = { dropdown = false })
+                            {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.sequential), fontSize = 20.sp) },
+                                    onClick = {
+                                        nav(routineId)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                if (!execution.value) {
+                    Button(
+                        //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                        onClick = {
+                            execution.value = !execution.value
+                            exIdx.intValue = 0
+                            cycleIdx.intValue = 0
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = stringResource(id = R.string.start_routine), fontSize = 25.sp)
+                    }
+                }
+                else {
+                    Button(
+                        //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                        onClick = {
+                            review.value = true
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = stringResource(id = R.string.finish), fontSize = 25.sp)
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyColumn {
+                val cycles = viewModel.uiState.cycleDataList
+
+                itemsIndexed(cycles) { index, cycle ->
+                    // Render cycle information
+                    Text(
+                        text = cycle.cycleName,
+                        color = Color.White,
+                        fontSize = 40.sp,
+                        fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+
+                    // Render exercises for the current cycle
+                    val cycleExercises = cycle.cycleExercises
+                    for (exerciseIndex in cycleExercises.indices) {
+                        val exercise = cycleExercises[exerciseIndex]
+                        Column() {
+                            Row() {
+                                ExerciseCard(
+                                    name = exercise.exercise.name,
+                                    repetitions = exercise.repetitions!!,
+                                    series = cycle.cycleRepetitions,
+                                    isPhone = false
+                                )
+
+                            }
+                            val current_serie = remember { mutableIntStateOf(1) }
+                            if(execution.value) {
+                                Row() {
+                                    Text(
+                                        text = "Serie actual:  " + current_serie.intValue,
+                                        color = Color.LightGray,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 28.sp,
+                                        modifier = Modifier.padding(start = 8.dp, top = 10.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Button(onClick = {
+                                        if(current_serie.intValue > 1) {
+                                            current_serie.intValue--
+                                        }
+                                    },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                                        Text(text = "-", fontSize = 25.sp)
+                                    }
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Button(onClick = {
+                                        if(current_serie.intValue < cycle.cycleRepetitions) {
+                                            current_serie.intValue++
+                                        }
+                                    },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                                        Text(text = "+", fontSize = 25.sp)
                                     }
                                 }
                             }
