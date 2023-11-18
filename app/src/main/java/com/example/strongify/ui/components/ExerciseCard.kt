@@ -1,20 +1,26 @@
 package com.example.strongify.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.strongify.R
 
 @Composable
@@ -31,24 +37,39 @@ fun ExerciseCard(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ejercicio_1),
-                contentDescription = name + "_image",
-                modifier = Modifier
-                    .width(200.dp)
+                painter = painterResource(R.drawable.ejercicio_1),
+                contentDescription = null,
+                modifier = Modifier.size(150.dp)
             )
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = name,
-                    color = Color.White
-                //    fontUnit = 20.dp
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                    fontWeight = FontWeight.Bold
                 )
-                Text(text = "Repetitions: $repetitions", color = Color.White)
-                Text(text = "Series: $series", color = Color.White)
+                Text(
+                    text = "Repetitions: $repetitions",
+                    color = Color.White,
+                    fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                    fontWeight = FontWeight.Bold
+                    )
+                Text(
+                    text = "Series: $series",
+                    color = Color.White,
+                    fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                    fontWeight = FontWeight.Bold
+                )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -57,7 +78,12 @@ fun ExerciseCard(
                     Button(
                         onClick = { /*TODO*/}
                     ) {
-                        Text(text = "Finish series", color = Color.White)
+                        Text(
+                            text = "Finish series",
+                            color = Color.White,
+                            fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
 

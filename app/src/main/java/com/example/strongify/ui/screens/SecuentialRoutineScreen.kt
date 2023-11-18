@@ -138,7 +138,7 @@ fun SecuentialRoutineScreen(
                                 onDismissRequest = { dropdown = false })
                             {
                                 DropdownMenuItem(
-                                    text = { Text(text = "hola") },
+                                    text = { Text(text = stringResource(id = R.string.list)) },
                                     onClick = {
                                         nav(routineId)
                                     }

@@ -2,18 +2,27 @@ package com.example.strongify.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,10 +40,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strongify.MainViewModel
-import com.example.strongify.ui.components.CycleCard
+import com.example.strongify.R
 import com.example.strongify.ui.components.ExerciseCard
 import com.example.strongify.util.getViewModelFactory
 
@@ -86,12 +100,81 @@ fun RoutineDetailScreen(
                 .background(Color.Black),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
+                color = Color.Red,
+                fontSize = 32.sp,
+                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName,
+                color = Color.Red,
+                fontSize = 20.sp,
+                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontWeight = FontWeight.Bold,
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Box(
+                    modifier = Modifier
+                        .background(Color.Red)
+                        .height(60.dp)
+                        .width(100.dp)
+                        .clickable { dropdown = true }
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.list),
+                                color = Color.White
+                            )
+                            IconButton(
+                                onClick = {
+                                    dropdown = true
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.KeyboardArrowDown,
+                                    contentDescription = "",
+                                    tint = Color.White
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = dropdown,
+                                onDismissRequest = { dropdown = false })
+                            {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.sequential)) },
+                                    onClick = {
+                                        nav(routineId)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
             LazyColumn {
                 val cycles = viewModel.uiState.cycleDataList
 
                 itemsIndexed(cycles) { _, cycle ->
                     // Render cycle information
-                    Text(text = "Cycle: ${cycle.cycleName}", color = Color.White)
+                    Text(
+                        text = cycle.cycleName,
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                        fontWeight = FontWeight.Bold,
+                    )
 
                     // Render exercises for the current cycle
                     val cycleExercises = cycle.cycleExercises

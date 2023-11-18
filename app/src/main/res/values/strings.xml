@@ -26,4 +26,5 @@
     <string name="score_asc">Score asc</string>
     <string name="diff_desc">Difficulty desc</string>
     <string name="diff_asc">Difficulty asc</string>
+    <string name="list">Listed</string>
 </resources>
