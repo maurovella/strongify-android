@@ -30,8 +30,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -75,6 +77,133 @@ fun SecuentialRoutineScreen(
     routineId: Int,
     nav: (Int) -> Unit,
     isPhone: Boolean = true
+) {
+    Surface {
+        if (isPhone) {
+            PhoneLayout(viewModel = viewModel, routineId, nav)
+        } else {
+            TabletLayout(viewModel = viewModel, routineId, nav)
+        }
+    }
+}
+
+@Composable
+fun RateDialog(
+    modifier: Modifier,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit,
+    viewModel: MainViewModel,
+    routineId: Int
+) {
+    var score by remember { mutableStateOf("") }
+    var reviewText by remember { mutableStateOf("") }
+
+    // Esta función convierte el texto del puntaje en un número
+    fun isValidScore(text: String): Boolean {
+        return text.toIntOrNull() in 1..10
+    }
+
+    Dialog(
+        onDismissRequest = onCancel,
+        properties = DialogProperties(
+            dismissOnClickOutside = false,
+            dismissOnBackPress = false
+        ),
+        content = {
+            Box(
+                modifier = modifier
+                    .padding(16.dp)
+                    .background(Color.White, shape = RoundedCornerShape(8.dp))
+                    .size(200.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.finished_routine),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = score,
+                        onValueChange = { newValue ->
+                            if (isValidScore(newValue)) {
+                                score = newValue
+                            }
+                        },
+                        label = { Text("Puntaje (1-10)") },
+                        singleLine = true,
+                        isError = !isValidScore(score), // Muestra error si el puntaje no es válido
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = "Comentario", color = Color.Black)
+                    BasicTextField(
+                        value = reviewText,
+                        onValueChange = { reviewText = it },
+                        textStyle = TextStyle(color = Color.Black),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .border(
+                                width = 1.dp,
+                                color = Color.Gray,
+                                shape = RoundedCornerShape(4.dp)
+                            ),
+                        maxLines = 5,
+                        singleLine = false,
+                        decorationBox = { innerTextField ->
+                            Box(
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            ) {
+                                innerTextField()
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Button(
+                            onClick = onCancel
+                        ) {
+                            Text(text = "Cancelar")
+                        }
+                        Button(
+                            onClick = {
+                                onConfirm()
+                                if(score != "")
+                                    viewModel.setRate(routineId,score.toInt(),reviewText)
+                                      },
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text(text = "Confirmar")
+                        }
+
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun PhoneLayout(
+    viewModel: MainViewModel,
+    routineId: Int,
+    nav: (Int) -> Unit
 ) {
     val review = remember { mutableStateOf(false) }
     val execution = remember { mutableStateOf(false) }
@@ -294,14 +423,14 @@ fun SecuentialRoutineScreen(
             ) {
                 if( !( cycleIdx.intValue == 0 && exIdx.intValue == 0 ))
                     Button(onClick = {
-                            current_serie.intValue = 1
-                            if (exIdx.intValue == 0) {
-                                cycleIdx.intValue--
-                                exIdx.intValue = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size -1
-                            } else {
-                                exIdx.intValue--
-                            }
-                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                        current_serie.intValue = 1
+                        if (exIdx.intValue == 0) {
+                            cycleIdx.intValue--
+                            exIdx.intValue = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size -1
+                        } else {
+                            exIdx.intValue--
+                        }
+                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                     ) {
                         Text(text = stringResource(id = R.string.previous))
                     }
@@ -368,115 +497,310 @@ fun SecuentialRoutineScreen(
 }
 
 @Composable
-fun RateDialog(
-    modifier: Modifier,
-    onConfirm: () -> Unit,
-    onCancel: () -> Unit,
+private fun TabletLayout(
     viewModel: MainViewModel,
-    routineId: Int
+    routineId: Int,
+    nav: (Int) -> Unit
 ) {
-    var score by remember { mutableStateOf("") }
-    var reviewText by remember { mutableStateOf("") }
-
-    // Esta función convierte el texto del puntaje en un número
-    fun isValidScore(text: String): Boolean {
-        return text.toIntOrNull() in 1..10
+    val review = remember { mutableStateOf(false) }
+    val execution = remember { mutableStateOf(false) }
+    val cycleIdx = remember { mutableIntStateOf(0) }
+    val exIdx = remember { mutableIntStateOf(0) }
+    val current_serie = remember { mutableIntStateOf(1) }
+    val fondo = Color(0xFF1C2120)
+    var dropdown by remember {
+        mutableStateOf(false)
     }
-
-    Dialog(
-        onDismissRequest = onCancel,
-        properties = DialogProperties(
-            dismissOnClickOutside = false,
-            dismissOnBackPress = false
-        ),
-        content = {
-            Box(
-                modifier = modifier
-                    .padding(16.dp)
-                    .background(Color.White, shape = RoundedCornerShape(8.dp))
-                    .size(200.dp)
+    val context = LocalContext.current.applicationContext
+    LaunchedEffect(key1 = true) {
+        viewModel.getRoutine(routineId = routineId)
+    }
+    if(viewModel.uiState.currentRoutine != null && viewModel.uiState.cycleDataList.isNotEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(fondo),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
             ) {
-                Column(
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "",
+                    tint = Color.White,
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center
+                        .background(
+                            color = Color.Red,
+                            shape = RoundedCornerShape(
+                                topStart = 16.dp,
+                                bottomStart = 16.dp,
+                                topEnd = 0.dp,
+                                bottomEnd = 0.dp
+                            )
+                        )
+                        .height(60.dp)
+                        .width(140.dp)
+                        .clickable { dropdown = true }
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.finished_routine),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    OutlinedTextField(
-                        value = score,
-                        onValueChange = { newValue ->
-                            if (isValidScore(newValue)) {
-                                score = newValue
-                            }
-                        },
-                        label = { Text("Puntaje (1-10)") },
-                        singleLine = true,
-                        isError = !isValidScore(score), // Muestra error si el puntaje no es válido
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = "Comentario", color = Color.Black)
-                    BasicTextField(
-                        value = reviewText,
-                        onValueChange = { reviewText = it },
-                        textStyle = TextStyle(color = Color.Black),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .border(
-                                width = 1.dp,
-                                color = Color.Gray,
-                                shape = RoundedCornerShape(4.dp)
-                            ),
-                        maxLines = 5,
-                        singleLine = false,
-                        decorationBox = { innerTextField ->
-                            Box(
-                                modifier = Modifier.padding(vertical = 8.dp)
-                            ) {
-                                innerTextField()
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Button(
-                            onClick = onCancel
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Text(text = "Cancelar")
+                            Text(
+                                text = stringResource(id = R.string.sequential),
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 8.dp),
+                                fontSize = 20.sp
+                            )
+                            IconButton(
+                                onClick = {
+                                    dropdown = true
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.KeyboardArrowDown,
+                                    contentDescription = "",
+                                    tint = Color.White
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = dropdown,
+                                onDismissRequest = { dropdown = false })
+                            {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.list), fontSize = 20.sp) },
+                                    onClick = {
+                                        nav(routineId)
+                                    }
+                                )
+                            }
                         }
-                        Button(
-                            onClick = {
-                                onConfirm()
-                                if(score != "")
-                                    viewModel.setRate(routineId,score.toInt(),reviewText)
-                                      },
-                            modifier = Modifier.padding(end = 8.dp)
-                        ) {
-                            Text(text = "Confirmar")
-                        }
-
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
+                color = Color.Red,
+                fontSize = 50.sp,
+                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontWeight = FontWeight.Bold,
+            )
+
+            Text(
+                text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName,
+                color = Color.Red,
+                fontSize = 38.sp, // Tamaño de la fuente
+                fontWeight = FontWeight.Bold, // Puedes ajustar el peso de la fuente según lo deseado
+                fontFamily = FontFamily.SansSerif // Cambia por la fuente que prefieras, como FontFamily.SansSerif, FontFamily.Cursive, etc.
+            )
+
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Image(
+                painter = painterResource(R.drawable.ejercicio_1),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(400.dp)
+                    .clip(shape = RoundedCornerShape(50.dp))
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].exercise.name.toUpperCase(), // Convierte el texto a mayúsculas
+                color = Color.White,
+                fontSize = 40.sp,
+                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.reps).uppercase(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start,
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions.toString(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start,
+                        fontSize = 20.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.est_time).uppercase(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start,
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration.toString(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start,
+                        fontSize = 20.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Series:".uppercase(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start,
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions.toString(),
+                        color = Color.LightGray,
+                        textAlign = TextAlign.Start,
+                        fontSize = 20.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            if(execution.value) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = stringResource(id = R.string.curr_series).uppercase() + current_serie.intValue , color = Color.White, fontSize = 30.sp)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Button(
+                        onClick = {
+                            if(current_serie.intValue > 1) {
+                                current_serie.intValue--
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = "-", fontSize = 25.sp)
+                    }
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Button(onClick = {
+                        if(current_serie.intValue < viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions) {
+                            current_serie.intValue++
+                        }
+                    },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                        Text(text = "+", fontSize = 25.sp)
+                    }
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CountdownTimer( viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration!!)
+                }
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if( !( cycleIdx.intValue == 0 && exIdx.intValue == 0 ))
+                    Button(onClick = {
+                        current_serie.intValue = 1
+                        if (exIdx.intValue == 0) {
+                            cycleIdx.intValue--
+                            exIdx.intValue = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size -1
+                        } else {
+                            exIdx.intValue--
+                        }
+                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = stringResource(id = R.string.previous), fontSize = 25.sp)
+                    }
+                if( !(viewModel.uiState.cycleDataList.size -1 == cycleIdx.intValue && viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size-1 == exIdx.intValue) ) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                        onClick = {
+                            current_serie.intValue = 1
+                            if (viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size - 1 == exIdx.intValue) {
+                                exIdx.intValue = 0
+                                cycleIdx.intValue++
+                            } else {
+                                exIdx.intValue++
+                            }
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.next), fontSize = 25.sp)
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(5.dp))
+            if (!execution.value) {
+                Button(
+                    //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                    onClick = {
+                        execution.value = !execution.value
+                        exIdx.intValue = 0
+                        cycleIdx.intValue = 0
+                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text(text = stringResource(id = R.string.start_routine), fontSize = 25.sp)
+                }
+            }
+            else {
+                Button(
+                    //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                    onClick = {
+                        review.value = true
+                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text(text = stringResource(id = R.string.finish), fontSize = 25.sp)
+                }
+            }
+            if (review.value) {
+                RateDialog( modifier = Modifier
+                    .width(300.dp) // Ancho del diálogo
+                    .height(400.dp),
+                    onConfirm = {
+                        // Acciones al confirmar el diálogo
+                        // Ejemplo: enviar valor o ejecutar alguna acción
+                        review.value = false // Cierra el diálogo
+                        execution.value = !execution.value
+                    },
+                    onCancel = {
+                        // Acciones al cancelar el diálogo
+                        review.value = false // Cierra el diálogo
+                    },
+                    viewModel,
+                    routineId
+                ) // Alto del diálogo)
+            }
         }
-    )
+    }
 }
 
 @Composable
@@ -515,5 +839,3 @@ fun CountdownTimer(time: Int) {
         }
     }
 }
-
-
