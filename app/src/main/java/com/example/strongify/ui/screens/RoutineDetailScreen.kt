@@ -1,11 +1,14 @@
 package com.example.strongify.ui.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
@@ -31,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strongify.MainViewModel
+import com.example.strongify.ui.components.CycleCard
 import com.example.strongify.ui.components.ExerciseCard
 import com.example.strongify.util.getViewModelFactory
 
@@ -52,12 +56,11 @@ fun RoutineDetailScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.getRoutine(routineId = routineId)
-        viewModel.getRoutineDetail(routineId)
     }
 
     if (viewModel.uiState.currentRoutine != null && viewModel.uiState.cycleDataList.isNotEmpty()) {
-        Scaffold(
-            topBar = {
+        Column(
+            /*topBar = {
                 TopAppBar(
                     title = {
                         Text(text = viewModel.uiState.currentRoutine!!.name, color = Color.White)
@@ -77,33 +80,32 @@ fun RoutineDetailScreen(
                         }
                     }
                 )
-            }
+            }*/
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // For each exercice in viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue] display the CycleExerciseCard
-            ExerciseCard(
-                "Exercise1",
-                12,
-                3,
-                1,
-                "Easy",
-                2
-            )
-            ExerciseCard(
-                "Exercise2",
-                15,
-                3,
-                1,
-                "Easy",
-                2
-            )
-            ExerciseCard(
-                "Exercise3",
-                8,
-                3,
-                1,
-                "Easy",
-                2
-            )
+            LazyColumn {
+                val cycles = viewModel.uiState.cycleDataList
+
+                itemsIndexed(cycles) { _, cycle ->
+                    // Render cycle information
+                    Text(text = "Cycle: ${cycle.cycleName}", color = Color.White)
+
+                    // Render exercises for the current cycle
+                    val cycleExercises = cycle.cycleExercises
+                    for (exerciseIndex in cycleExercises.indices) {
+                        val exercise = cycleExercises[exerciseIndex]
+                        ExerciseCard(
+                            name = exercise.exercise.name,
+                            repetitions = exercise.repetitions!!,
+                            series = cycle.cycleRepetitions
+                        )
+                    }
+                }
+            }
+
         }
     } else {
         // Loading or empty state UI

@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.strongify.R
@@ -21,9 +22,6 @@ fun ExerciseCard(
     name: String,
     repetitions: Int,
     series: Int,
-    currentSerie: Int,
-    difficulty: String,
-    image: Int,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -45,20 +43,21 @@ fun ExerciseCard(
                 modifier = Modifier.fillMaxSize()
             ) {
                 Text(
-                    text = name
+                    text = name,
+                    color = Color.White
                 //    fontUnit = 20.dp
                 )
-                Text(text = "Repetitions: $repetitions")
-                Text(text = "Series: $series")
+                Text(text = "Repetitions: $repetitions", color = Color.White)
+                Text(text = "Series: $series", color = Color.White)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    Text(text = "Current Series: $currentSerie")
+                    //Text(text = "Current Series: $currentSerie", color = Color.White)
                     Button(
                         onClick = { /*TODO*/}
                     ) {
-                        Text(text = "Finish series")
+                        Text(text = "Finish series", color = Color.White)
                     }
                 }
 
