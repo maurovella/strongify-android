@@ -38,7 +38,8 @@ import com.example.strongify.util.getViewModelFactory
 @Composable
 fun RoutineScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-    navToRoutineDetail: (Int) -> Unit
+    navToRoutineDetail: (Int) -> Unit,
+    isPhone: Boolean = true
 ) {
     var dropdown by remember {
         mutableStateOf(false)

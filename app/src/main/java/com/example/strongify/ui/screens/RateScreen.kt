@@ -23,7 +23,7 @@ import com.example.strongify.R
 
 @Preview
 @Composable
-fun RateScreen() {
+fun RateScreen(isPhone: Boolean = true) {
     var value by remember {
         mutableStateOf("")
     }

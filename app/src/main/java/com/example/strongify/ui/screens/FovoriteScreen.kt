@@ -28,7 +28,8 @@ import com.example.strongify.util.getViewModelFactory
 @Composable
 fun FavoriteScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-    navToRoutineDetail: (Int) -> Unit
+    navToRoutineDetail: (Int) -> Unit,
+    isPhone: Boolean = true
 ) {
     val fondo = Color(0xFF1C2120)
     Surface(color = fondo) {

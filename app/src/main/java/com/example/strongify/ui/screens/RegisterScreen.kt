@@ -25,7 +25,7 @@ import com.example.strongify.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(isPhone: Boolean = true) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {

@@ -73,7 +73,8 @@ import kotlinx.coroutines.launch
 fun SecuentialRoutineScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     routineId: Int,
-    nav: (Int) -> Unit
+    nav: (Int) -> Unit,
+    isPhone: Boolean = true
 ) {
     val review = remember { mutableStateOf(false) }
     val execution = remember { mutableStateOf(false) }

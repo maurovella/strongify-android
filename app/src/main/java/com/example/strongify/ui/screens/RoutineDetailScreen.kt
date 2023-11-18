@@ -62,7 +62,8 @@ import com.example.strongify.util.getViewModelFactory
 fun RoutineDetailScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     routineId: Int,
-    nav: (Int) -> Unit
+    nav: (Int) -> Unit,
+    isPhone: Boolean = true
 ) {
     val cycleIdx = remember { mutableIntStateOf(0) }
     val review = remember { mutableStateOf(false) }

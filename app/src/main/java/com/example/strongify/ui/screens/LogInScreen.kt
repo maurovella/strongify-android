@@ -39,7 +39,8 @@ import com.example.strongify.util.getViewModelFactory
 fun LoginScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     onLogin: () -> Unit = {},
-    navToRegister: () -> Unit = {}
+    navToRegister: () -> Unit = {},
+    isPhone: Boolean = true
 ) {
     val userState = remember { mutableStateOf("") }
     val pswState = remember { mutableStateOf("") }
