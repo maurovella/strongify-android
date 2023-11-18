@@ -41,12 +41,19 @@ fun StrongifyNavGraph(
         }
         composable(Screen.RoutineScreenClass.route) {
             RoutineScreen(
-                navToRoutineDetail = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/$route") }
+                navToRoutineDetail = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/$route") }
+            )
+        }
+        composable(Screen.RoutineDetailScreenClass.route) {
+            RoutineDetailScreen(
+                routineId = it.arguments?.getString("routineId")?.toInt() ?: 0,
+                nav = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/$route") }
             )
         }
         composable(Screen.SecuentialRoutineScreenClass.route) {
             SecuentialRoutineScreen(
-                routineId = it.arguments?.getString("routineId")?.toInt() ?: 0
+                routineId = it.arguments?.getString("routineId")?.toInt() ?: 0,
+                nav = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/list" + "/$route") }
             )
         }
         composable(Screen.FavoriteScreenClass.route) {

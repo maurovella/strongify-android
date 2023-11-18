@@ -39,7 +39,8 @@ import com.example.strongify.util.getViewModelFactory
 @Composable
 fun RoutineDetailScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-    routineId: Int
+    routineId: Int,
+    nav: (Int) -> Unit
 ) {
     val cycleIdx = remember { mutableIntStateOf(0) }
     val exIdx = remember { mutableIntStateOf(0) }
@@ -110,11 +111,4 @@ fun RoutineDetailScreen(
             CircularProgressIndicator() // or some other indication of loading or empty state
         }
     }
-}
-
-
-@Preview
-@Composable
-fun RoutineDetailScreenPreview() {
-    RoutineDetailScreen(routineId = 1)
 }

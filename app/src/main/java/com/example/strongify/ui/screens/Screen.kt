@@ -35,13 +35,13 @@ sealed class Screen(
     object RoutineDetailScreenClass: Screen(
         title = "Routine Detail",
         icon = Icons.Filled.Build,
-        route = "routines/{routineId}"
+        route = "routines/list/{routineId}"
     )
 
     object SecuentialRoutineScreenClass: Screen(
         title = "Secuential Routine",
         icon = Icons.Filled.Build,
-        route = "routines/{routineId}"
+        route = "routines/sequential/{routineId}"
     )
     object FavoriteScreenClass: Screen(
         title = "Favorite",

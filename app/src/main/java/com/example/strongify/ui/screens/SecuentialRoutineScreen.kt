@@ -42,10 +42,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.util.getViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
-fun SecuentialRoutineScreen(viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-routineId: Int) {
+fun SecuentialRoutineScreen(
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    routineId: Int,
+    nav: (Int) -> Unit
+) {
     val cycleIdx = remember { mutableIntStateOf(0) }
     val exIdx = remember { mutableIntStateOf(0) }
     var dropdown by remember {
@@ -117,7 +123,7 @@ routineId: Int) {
                                 DropdownMenuItem(
                                     text = { Text(text = "hola") },
                                     onClick = {
-                                        Toast.makeText(context, "messi", Toast.LENGTH_LONG).show()
+                                        nav(routineId)
                                     }
                                 )
                             }
