@@ -30,7 +30,8 @@ fun StrongifyNavGraph(
         composable(Screen.LoginScreenClass.route) {
             LoginScreen(
                 onLogin = { navController.navigate(Screen.HomeScreenClass.route) },
-                navToRegister = { navController.navigate(Screen.RegisterScreenClass.route) }
+                navController = navController
+                //navToRegister = { navController.navigate(Screen.RegisterScreenClass.route) }
             )
         }
         composable(Screen.RegisterScreenClass.route) {
@@ -41,24 +42,25 @@ fun StrongifyNavGraph(
         }
         composable(Screen.RoutineScreenClass.route) {
             RoutineScreen(
-                navToRoutineDetail = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/$route") }
+                navController = navController
             )
         }
         composable(Screen.RoutineDetailScreenClass.route) {
             RoutineDetailScreen(
                 routineId = it.arguments?.getString("routineId")?.toInt() ?: 0,
-                nav = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/$route") }
+                navController = navController
             )
         }
         composable(Screen.SecuentialRoutineScreenClass.route) {
             SecuentialRoutineScreen(
                 routineId = it.arguments?.getString("routineId")?.toInt() ?: 0,
-                nav = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/list" + "/$route") }
+                navController = navController
+                //nav = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/list" + "/$route") }
             )
         }
         composable(Screen.FavoriteScreenClass.route) {
             FavoriteScreen(
-                navToRoutineDetail = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/$route") }
+                navController = navController
             )
         }
     }

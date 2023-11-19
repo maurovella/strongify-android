@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.ui.components.RoutineCard
@@ -28,7 +29,7 @@ import com.example.strongify.util.getViewModelFactory
 @Composable
 fun FavoriteScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-    navToRoutineDetail: (Int) -> Unit
+    navController: NavController
 ) {
     val fondo = Color(0xFF1C2120)
     Surface(color = fondo) {
@@ -45,7 +46,10 @@ fun FavoriteScreen(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.clickable { /* Acción al presionar la flecha */ }
+                    modifier = Modifier.clickable {
+                        //if(!navController.popBackStack())
+                            navController.navigate(Screen.HomeScreenClass.route)
+                    }
                 )
                 Text(
                     text = stringResource(id = R.string.nav_favorite),
@@ -68,8 +72,8 @@ fun FavoriteScreen(
                                 viewModel,
                                 routine,
                                 isFaved = true,
-                                modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }),
-                                func = navToRoutineDetail
+                                modifier = Modifier.clickable(onClick = { navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/${routine.id}") }),
+                                navController = navController
                             )
                         }
                     } else {

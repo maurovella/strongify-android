@@ -28,18 +28,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.util.getViewModelFactory
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun LoginScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     onLogin: () -> Unit = {},
-    navToRegister: () -> Unit = {}
+    navController: NavController
 ) {
     val userState = remember { mutableStateOf("") }
     val pswState = remember { mutableStateOf("") }
@@ -159,7 +159,7 @@ fun LoginScreen(
                         fontSize = 14.sp,
                         modifier = Modifier
                             .clickable {
-                                navToRegister()
+                                navController.navigate(Screen.RegisterScreenClass.route)
                             }
                             .align(Alignment.CenterHorizontally)
                             .padding(16.dp)

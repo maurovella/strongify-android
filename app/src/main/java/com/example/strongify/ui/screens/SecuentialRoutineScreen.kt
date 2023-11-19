@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.util.getViewModelFactory
@@ -73,7 +74,7 @@ import kotlinx.coroutines.launch
 fun SecuentialRoutineScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     routineId: Int,
-    nav: (Int) -> Unit
+    navController: NavController
 ) {
     val review = remember { mutableStateOf(false) }
     val execution = remember { mutableStateOf(false) }
@@ -156,7 +157,7 @@ fun SecuentialRoutineScreen(
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.list)) },
                                     onClick = {
-                                        nav(routineId)
+                                        navController.navigate(Screen.RoutineScreenClass.route + "/list" + "/${routineId}")
                                     }
                                 )
                             }

@@ -51,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.ui.components.ExerciseCard
@@ -62,7 +63,7 @@ import com.example.strongify.util.getViewModelFactory
 fun RoutineDetailScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     routineId: Int,
-    nav: (Int) -> Unit
+    navController: NavController
 ) {
     val cycleIdx = remember { mutableIntStateOf(0) }
     val review = remember { mutableStateOf(false) }
@@ -111,12 +112,16 @@ fun RoutineDetailScreen(
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 8.dp),
                 verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.clickable { /* Acción al presionar la flecha */ }
-                )
+                IconButton(onClick = {
+                    if(!navController.popBackStack())
+                        navController.navigate(Screen.HomeScreenClass.route)
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
             }
             Text(
                 text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
@@ -184,7 +189,7 @@ fun RoutineDetailScreen(
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.sequential)) },
                                     onClick = {
-                                        nav(routineId)
+                                        navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/$routineId")
                                     }
                                 )
                             }
