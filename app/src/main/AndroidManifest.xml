@@ -41,7 +41,8 @@ xmlns:tools="http://schemas.android.com/tools">
         android:name=".MainActivity"
         android:exported="true"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Strongify">
+        android:theme="@style/Theme.Strongify"
+        android:screenOrientation="fullSensor">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
