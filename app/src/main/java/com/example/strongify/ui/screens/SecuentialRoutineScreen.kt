@@ -1,5 +1,6 @@
 package com.example.strongify.ui.screens
 
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,10 +17,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.OutlinedTextField
@@ -48,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -219,278 +223,565 @@ private fun PhoneLayout(
         viewModel.getRoutine(routineId = routineId)
     }
     if(viewModel.uiState.currentRoutine != null && viewModel.uiState.cycleDataList.isNotEmpty()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(fondo),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "",
-                    tint = Color.White,
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            color = Color.Red,
-                            shape = RoundedCornerShape(
-                                topStart = 16.dp,
-                                bottomStart = 16.dp,
-                                topEnd = 0.dp,
-                                bottomEnd = 0.dp
-                            )
-                        )
-                        .height(40.dp)
-                        .width(120.dp)
-                        .clickable { dropdown = true }
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.sequential),
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                            IconButton(
-                                onClick = {
-                                    dropdown = true
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.KeyboardArrowDown,
-                                    contentDescription = "",
-                                    tint = Color.White
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = dropdown,
-                                onDismissRequest = { dropdown = false })
-                            {
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.list)) },
-                                    onClick = {
-                                        nav(routineId)
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
-                color = Color.Red,
-                fontSize = 32.sp,
-                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
-                fontWeight = FontWeight.Bold,
-            )
+        val landscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-            Text(
-                text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName,
-                color = Color.Red,
-                fontSize = 20.sp, // Tamaño de la fuente
-                fontWeight = FontWeight.Bold, // Puedes ajustar el peso de la fuente según lo deseado
-                fontFamily = FontFamily.SansSerif // Cambia por la fuente que prefieras, como FontFamily.SansSerif, FontFamily.Cursive, etc.
-            )
-
-
-            Spacer(modifier = Modifier.height(20.dp))
-            Image(
-                painter = painterResource(R.drawable.ejercicio_1),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(200.dp)
-                    .clip(shape = RoundedCornerShape(50.dp))
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].exercise.name.toUpperCase(), // Convierte el texto a mayúsculas
-                color = Color.White,
-                fontSize = 24.sp,
-                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+        if (!landscape){
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                    .fillMaxSize()
+                    .background(fondo)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.reps).uppercase(),
-                        color = Color.LightGray,
-                        textAlign = TextAlign.Start
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "",
+                        tint = Color.White,
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions.toString(),
-                        color = Color.LightGray,
-                        textAlign = TextAlign.Start
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.est_time).uppercase(),
-                        color = Color.LightGray,
-                        textAlign = TextAlign.Start
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration.toString(),
-                        color = Color.LightGray,
-                        textAlign = TextAlign.Start
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Series:".uppercase(),
-                        color = Color.LightGray,
-                        textAlign = TextAlign.Start
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions.toString(),
-                        color = Color.LightGray,
-                        textAlign = TextAlign.Start
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            if(execution.value) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = stringResource(id = R.string.curr_series).uppercase() + current_serie.intValue , color = Color.White, fontSize = 20.sp)
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Button(onClick = {
-                        if(current_serie.intValue > 1) {
-                            current_serie.intValue--
-                        }
-                    },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-                        Text(text = "-")
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Button(onClick = {
-                        if(current_serie.intValue < viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions) {
-                            current_serie.intValue++
-                        }
-                    },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-                        Text(text = "+")
-                    }
                 }
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    CountdownTimer( viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration!!)
-                }
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if( !( cycleIdx.intValue == 0 && exIdx.intValue == 0 ))
-                    Button(onClick = {
-                        current_serie.intValue = 1
-                        if (exIdx.intValue == 0) {
-                            cycleIdx.intValue--
-                            exIdx.intValue = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size -1
-                        } else {
-                            exIdx.intValue--
-                        }
-                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                color = Color.Red,
+                                shape = RoundedCornerShape(
+                                    topStart = 16.dp,
+                                    bottomStart = 16.dp,
+                                    topEnd = 0.dp,
+                                    bottomEnd = 0.dp
+                                )
+                            )
+                            .height(40.dp)
+                            .width(120.dp)
+                            .clickable { dropdown = true }
                     ) {
-                        Text(text = stringResource(id = R.string.previous))
-                    }
-                if( !(viewModel.uiState.cycleDataList.size -1 == cycleIdx.intValue && viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size-1 == exIdx.intValue) ) {
-                    Button(
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                        onClick = {
-                            current_serie.intValue = 1
-                            if (viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size - 1 == exIdx.intValue) {
-                                exIdx.intValue = 0
-                                cycleIdx.intValue++
-                            } else {
-                                exIdx.intValue++
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.sequential),
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                                IconButton(
+                                    onClick = {
+                                        dropdown = true
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.KeyboardArrowDown,
+                                        contentDescription = "",
+                                        tint = Color.White
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = dropdown,
+                                    onDismissRequest = { dropdown = false })
+                                {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(id = R.string.list)) },
+                                        onClick = {
+                                            nav(routineId)
+                                        }
+                                    )
+                                }
                             }
                         }
-                    ) {
-                        Text(text = stringResource(id = R.string.next))
                     }
                 }
-            }
-            Spacer(modifier = Modifier.height(5.dp))
-            if (!execution.value) {
-                Button(
-                    //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
-                    onClick = {
-                        execution.value = !execution.value
-                        exIdx.intValue = 0
-                        cycleIdx.intValue = 0
-                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
+                    color = Color.Red,
+                    fontSize = 32.sp,
+                    fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                    fontWeight = FontWeight.Bold,
+                )
+
+                Text(
+                    text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName,
+                    color = Color.Red,
+                    fontSize = 20.sp, // Tamaño de la fuente
+                    fontWeight = FontWeight.Bold, // Puedes ajustar el peso de la fuente según lo deseado
+                    fontFamily = FontFamily.SansSerif // Cambia por la fuente que prefieras, como FontFamily.SansSerif, FontFamily.Cursive, etc.
+                )
+
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Image(
+                    painter = painterResource(R.drawable.ejercicio_1),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clip(shape = RoundedCornerShape(50.dp))
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].exercise.name.toUpperCase(), // Convierte el texto a mayúsculas
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = stringResource(id = R.string.start_routine))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.reps).uppercase(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions.toString(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.est_time).uppercase(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration.toString(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Series:".uppercase(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions.toString(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                if (execution.value) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.curr_series).uppercase() + current_serie.intValue,
+                            color = Color.White,
+                            fontSize = 20.sp
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Button(onClick = {
+                            if (current_serie.intValue > 1) {
+                                current_serie.intValue--
+                            }
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                            Text(text = "-")
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Button(onClick = {
+                            if (current_serie.intValue < viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions) {
+                                current_serie.intValue++
+                            }
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                            Text(text = "+")
+                        }
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CountdownTimer(viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration!!)
+                    }
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (!(cycleIdx.intValue == 0 && exIdx.intValue == 0))
+                        Button(
+                            onClick = {
+                                current_serie.intValue = 1
+                                if (exIdx.intValue == 0) {
+                                    cycleIdx.intValue--
+                                    exIdx.intValue =
+                                        viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size - 1
+                                } else {
+                                    exIdx.intValue--
+                                }
+                            }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                        ) {
+                            Text(text = stringResource(id = R.string.previous))
+                        }
+                    if (!(viewModel.uiState.cycleDataList.size - 1 == cycleIdx.intValue && viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size - 1 == exIdx.intValue)) {
+                        Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                            onClick = {
+                                current_serie.intValue = 1
+                                if (viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size - 1 == exIdx.intValue) {
+                                    exIdx.intValue = 0
+                                    cycleIdx.intValue++
+                                } else {
+                                    exIdx.intValue++
+                                }
+                            }
+                        ) {
+                            Text(text = stringResource(id = R.string.next))
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(5.dp))
+                if (!execution.value) {
+                    Button(
+                        //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                        onClick = {
+                            execution.value = !execution.value
+                            exIdx.intValue = 0
+                            cycleIdx.intValue = 0
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = stringResource(id = R.string.start_routine))
+                    }
+                } else {
+                    Button(
+                        //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                        onClick = {
+                            review.value = true
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = stringResource(id = R.string.finish))
+                    }
+                }
+                if (review.value) {
+                    RateDialog(
+                        modifier = Modifier
+                            .width(300.dp) // Ancho del diálogo
+                            .height(400.dp),
+                        onConfirm = {
+                            // Acciones al confirmar el diálogo
+                            // Ejemplo: enviar valor o ejecutar alguna acción
+                            review.value = false // Cierra el diálogo
+                            execution.value = !execution.value
+                        },
+                        onCancel = {
+                            // Acciones al cancelar el diálogo
+                            review.value = false // Cierra el diálogo
+                        },
+                        viewModel,
+                        routineId
+                    ) // Alto del diálogo)
                 }
             }
-            else {
-                Button(
-                    //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
-                    onClick = {
-                        review.value = true
-                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(fondo)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Text(text = stringResource(id = R.string.finish))
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "",
+                        tint = Color.White,
+                    )
                 }
-            }
-            if (review.value) {
-                RateDialog( modifier = Modifier
-                    .width(300.dp) // Ancho del diálogo
-                    .height(400.dp),
-                    onConfirm = {
-                        // Acciones al confirmar el diálogo
-                        // Ejemplo: enviar valor o ejecutar alguna acción
-                        review.value = false // Cierra el diálogo
-                        execution.value = !execution.value
-                    },
-                    onCancel = {
-                        // Acciones al cancelar el diálogo
-                        review.value = false // Cierra el diálogo
-                    },
-                    viewModel,
-                    routineId
-                ) // Alto del diálogo)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                color = Color.Red,
+                                shape = RoundedCornerShape(
+                                    topStart = 16.dp,
+                                    bottomStart = 16.dp,
+                                    topEnd = 0.dp,
+                                    bottomEnd = 0.dp
+                                )
+                            )
+                            .height(40.dp)
+                            .width(120.dp)
+                            .clickable { dropdown = true }
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.sequential),
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                                IconButton(
+                                    onClick = {
+                                        dropdown = true
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.KeyboardArrowDown,
+                                        contentDescription = "",
+                                        tint = Color.White
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = dropdown,
+                                    onDismissRequest = { dropdown = false })
+                                {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(id = R.string.list)) },
+                                        onClick = {
+                                            nav(routineId)
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
+                    color = Color.Red,
+                    fontSize = 32.sp,
+                    fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                    fontWeight = FontWeight.Bold,
+                )
+
+                Text(
+                    text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName,
+                    color = Color.Red,
+                    fontSize = 20.sp, // Tamaño de la fuente
+                    fontWeight = FontWeight.Bold, // Puedes ajustar el peso de la fuente según lo deseado
+                    fontFamily = FontFamily.SansSerif // Cambia por la fuente que prefieras, como FontFamily.SansSerif, FontFamily.Cursive, etc.
+                )
+
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Image(
+                    painter = painterResource(R.drawable.ejercicio_1),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clip(shape = RoundedCornerShape(50.dp))
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].exercise.name.toUpperCase(), // Convierte el texto a mayúsculas
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.reps).uppercase(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].repetitions.toString(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.est_time).uppercase(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration.toString(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Series:".uppercase(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions.toString(),
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                if(execution.value) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = stringResource(id = R.string.curr_series).uppercase() + current_serie.intValue , color = Color.White, fontSize = 20.sp)
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Button(onClick = {
+                            if(current_serie.intValue > 1) {
+                                current_serie.intValue--
+                            }
+                        },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                            Text(text = "-")
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Button(onClick = {
+                            if(current_serie.intValue < viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleRepetitions) {
+                                current_serie.intValue++
+                            }
+                        },colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                            Text(text = "+")
+                        }
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CountdownTimer( viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises[exIdx.intValue].duration!!)
+                    }
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if( !( cycleIdx.intValue == 0 && exIdx.intValue == 0 ))
+                        Button(onClick = {
+                            current_serie.intValue = 1
+                            if (exIdx.intValue == 0) {
+                                cycleIdx.intValue--
+                                exIdx.intValue = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size -1
+                            } else {
+                                exIdx.intValue--
+                            }
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                        ) {
+                            Text(text = stringResource(id = R.string.previous))
+                        }
+                    if( !(viewModel.uiState.cycleDataList.size -1 == cycleIdx.intValue && viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size-1 == exIdx.intValue) ) {
+                        Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                            onClick = {
+                                current_serie.intValue = 1
+                                if (viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleExercises.size - 1 == exIdx.intValue) {
+                                    exIdx.intValue = 0
+                                    cycleIdx.intValue++
+                                } else {
+                                    exIdx.intValue++
+                                }
+                            }
+                        ) {
+                            Text(text = stringResource(id = R.string.next))
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(5.dp))
+                if (!execution.value) {
+                    Button(
+                        //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                        onClick = {
+                            execution.value = !execution.value
+                            exIdx.intValue = 0
+                            cycleIdx.intValue = 0
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = stringResource(id = R.string.start_routine))
+                    }
+                }
+                else {
+                    Button(
+                        //colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                        onClick = {
+                            review.value = true
+                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text(text = stringResource(id = R.string.finish))
+                    }
+                }
+                if (review.value) {
+                    RateDialog( modifier = Modifier
+                        .width(300.dp) // Ancho del diálogo
+                        .height(400.dp),
+                        onConfirm = {
+                            // Acciones al confirmar el diálogo
+                            // Ejemplo: enviar valor o ejecutar alguna acción
+                            review.value = false // Cierra el diálogo
+                            execution.value = !execution.value
+                        },
+                        onCancel = {
+                            // Acciones al cancelar el diálogo
+                            review.value = false // Cierra el diálogo
+                        },
+                        viewModel,
+                        routineId
+                    ) // Alto del diálogo)
+                }
             }
         }
     }

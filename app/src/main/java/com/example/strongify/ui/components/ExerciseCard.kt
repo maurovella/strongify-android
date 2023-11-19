@@ -42,7 +42,7 @@ fun ExerciseCard(
     }
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(450.dp)
             .height(200.dp)
     ) {
         Row(
