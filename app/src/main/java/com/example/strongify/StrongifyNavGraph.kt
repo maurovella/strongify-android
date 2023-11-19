@@ -51,7 +51,7 @@ fun StrongifyNavGraph(
             RegisterScreen(isPhone = !isTablet())
         }
         composable(Screen.HomeScreenClass.route) {
-            HomeScreen(isPhone = !isTablet())
+            HomeScreen(navToRoutineDetail = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/$route") }, isPhone = !isTablet())
         }
         composable(Screen.RoutineScreenClass.route) {
             RoutineScreen(
