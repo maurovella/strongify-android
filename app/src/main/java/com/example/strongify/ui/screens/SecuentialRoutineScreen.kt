@@ -69,6 +69,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
+import com.example.strongify.ui.components.RateDialog
 import com.example.strongify.util.getViewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.CoroutineScope
@@ -91,117 +92,6 @@ fun SecuentialRoutineScreen(
     }
 }
 
-@Composable
-fun RateDialog(
-    modifier: Modifier,
-    onConfirm: () -> Unit,
-    onCancel: () -> Unit,
-    viewModel: MainViewModel,
-    routineId: Int
-) {
-    var score by remember { mutableStateOf("") }
-    var reviewText by remember { mutableStateOf("") }
-
-    // Esta función convierte el texto del puntaje en un número
-    fun isValidScore(text: String): Boolean {
-        return text.toIntOrNull() in 1..10
-    }
-
-    Dialog(
-        onDismissRequest = onCancel,
-        properties = DialogProperties(
-            dismissOnClickOutside = false,
-            dismissOnBackPress = false
-        ),
-        content = {
-            Box(
-                modifier = modifier
-                    .padding(16.dp)
-                    .background(Color.White, shape = RoundedCornerShape(8.dp))
-                    .size(200.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.finished_routine),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    OutlinedTextField(
-                        value = score,
-                        onValueChange = { newValue ->
-                            if (isValidScore(newValue)) {
-                                score = newValue
-                            }
-                        },
-                        label = { Text("Puntaje (1-10)") },
-                        singleLine = true,
-                        isError = !isValidScore(score), // Muestra error si el puntaje no es válido
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = "Comentario", color = Color.Black)
-                    BasicTextField(
-                        value = reviewText,
-                        onValueChange = { reviewText = it },
-                        textStyle = TextStyle(color = Color.Black),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .border(
-                                width = 1.dp,
-                                color = Color.Gray,
-                                shape = RoundedCornerShape(4.dp)
-                            ),
-                        maxLines = 5,
-                        singleLine = false,
-                        decorationBox = { innerTextField ->
-                            Box(
-                                modifier = Modifier.padding(vertical = 8.dp)
-                            ) {
-                                innerTextField()
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Button(
-                            onClick = onCancel
-                        ) {
-                            Text(text = "Cancelar")
-                        }
-                        Button(
-                            onClick = {
-                                onConfirm()
-                                if(score != "")
-                                    viewModel.setRate(routineId,score.toInt(),reviewText)
-                                      },
-                            modifier = Modifier.padding(end = 8.dp)
-                        ) {
-                            Text(text = "Confirmar")
-                        }
-
-                    }
-                }
-            }
-        }
-    )
-}
 
 @Composable
 private fun PhoneLayout(
@@ -503,7 +393,8 @@ private fun PhoneLayout(
                             review.value = false // Cierra el diálogo
                         },
                         viewModel,
-                        routineId
+                        routineId,
+                        isPhone = true
                     ) // Alto del diálogo)
                 }
             }
@@ -779,7 +670,8 @@ private fun PhoneLayout(
                             review.value = false // Cierra el diálogo
                         },
                         viewModel,
-                        routineId
+                        routineId,
+                        isPhone = true
                     ) // Alto del diálogo)
                 }
             }
@@ -1087,7 +979,8 @@ private fun TabletLayout(
                         review.value = false // Cierra el diálogo
                     },
                     viewModel,
-                    routineId
+                    routineId,
+                    isPhone = false
                 ) // Alto del diálogo)
             }
         }
