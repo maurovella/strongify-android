@@ -1,12 +1,14 @@
 package com.example.strongify
 
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.strongify.ui.screens.FavoriteScreen
 import com.example.strongify.ui.screens.HomeScreen
 import com.example.strongify.ui.screens.LoginScreen
@@ -27,38 +29,52 @@ fun StrongifyNavGraph(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable(Screen.LoginScreenClass.route) {
+        composable(
+            route = Screen.LoginScreenClass.route
+        ) {
             LoginScreen(
                 onLogin = { navController.navigate(Screen.HomeScreenClass.route) },
                 navController = navController
-                //navToRegister = { navController.navigate(Screen.RegisterScreenClass.route) }
             )
         }
-        composable(Screen.RegisterScreenClass.route) {
+        composable(
+            route = Screen.RegisterScreenClass.route
+        ) {
             RegisterScreen()
         }
-        composable(Screen.HomeScreenClass.route) {
+        composable(
+            route = Screen.HomeScreenClass.route
+        ) {
             HomeScreen()
         }
-        composable(Screen.RoutineScreenClass.route) {
+        composable(
+            route = Screen.RoutineScreenClass.route
+        ) {
             RoutineScreen(
                 navController = navController
             )
         }
-        composable(Screen.RoutineDetailScreenClass.route) {
+        composable(
+            route = Screen.RoutineDetailScreenClass.route,
+            arguments = listOf(navArgument("routineId") { type = NavType.IntType })
+        ) { NavBackStackEntry ->
             RoutineDetailScreen(
-                routineId = it.arguments?.getString("routineId")?.toInt() ?: 0,
+                routineId = NavBackStackEntry.arguments?.getInt("routineId")!!,
                 navController = navController
             )
         }
-        composable(Screen.SecuentialRoutineScreenClass.route) {
+        composable(
+            route = Screen.SecuentialRoutineScreenClass.route,
+            arguments = listOf(navArgument("routineId") { type = NavType.IntType })
+        ) { NavBackStackEntry ->
             SecuentialRoutineScreen(
-                routineId = it.arguments?.getString("routineId")?.toInt() ?: 0,
+                routineId = NavBackStackEntry.arguments?.getInt("routineId")!!,
                 navController = navController
-                //nav = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/list" + "/$route") }
             )
         }
-        composable(Screen.FavoriteScreenClass.route) {
+        composable(
+            route = Screen.FavoriteScreenClass.route
+        ) {
             FavoriteScreen(
                 navController = navController
             )

@@ -82,27 +82,6 @@ fun RoutineDetailScreen(
 
     if (viewModel.uiState.currentRoutine != null && viewModel.uiState.cycleDataList.isNotEmpty()) {
         Column(
-            /*topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = viewModel.uiState.currentRoutine!!.name, color = Color.White)
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { /* TODO: Handle back press */ }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "", tint = Color.White)
-                        }
-                    },
-                    actions = {
-                        // Assuming you have actions like share or favorite
-                        IconButton(onClick = { /* TODO */ }) {
-                            Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
-                        }
-                        IconButton(onClick = { /* TODO */ }) {
-                            Icon(Icons.Default.Favorite, contentDescription = "Favorite", tint = Color.White)
-                        }
-                    }
-                )
-            }*/
             modifier = Modifier
                 .fillMaxSize()
                 .background(fondo),

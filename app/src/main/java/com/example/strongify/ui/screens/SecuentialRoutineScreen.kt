@@ -100,11 +100,16 @@ fun SecuentialRoutineScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start
             ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "",
-                    tint = Color.White,
-                )
+                IconButton(onClick = {
+                    if(!navController.popBackStack())
+                        navController.navigate(Screen.HomeScreenClass.route)
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),

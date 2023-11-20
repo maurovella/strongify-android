@@ -56,15 +56,6 @@ fun RoutineScreen(
                     .padding(start = 16.dp, top = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.clickable {
-                        //if(!navController.popBackStack())
-                            navController.navigate(Screen.HomeScreenClass.route)
-                    }
-                )
                 Text(
                     text = stringResource(id = R.string.nav_routines),
                     fontSize = 30.sp,
