@@ -1,6 +1,7 @@
 package com.example.strongify.ui.screens
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -74,7 +75,12 @@ fun RoutineDetailScreen(
         mutableStateOf(false)
     }
 
-    val context = LocalContext.current.applicationContext
+    val context = LocalContext.current
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, "https://www.strongify.com/routine/list/${routineId}")
+        type = "text/plain"
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.getRoutine(routineId = routineId)
@@ -101,19 +107,28 @@ fun RoutineDetailScreen(
                         tint = Color.White
                     )
                 }
+                IconButton(onClick = {
+                    context.startActivity(Intent.createChooser(sendIntent, null))
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
             }
             Text(
-                text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
+                text = viewModel.uiState.currentRoutine!!.name.uppercase(),
                 color = Color.Red,
                 fontSize = 32.sp,
-                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Bold,
             )
             Text(
                 text = viewModel.uiState.cycleDataList[cycleIdx.intValue].cycleName,
                 color = Color.Red,
                 fontSize = 20.sp,
-                fontFamily = FontFamily.SansSerif, // Cambia a la fuente que desees
+                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Bold,
             )
             Spacer(modifier = Modifier.height(7.dp))

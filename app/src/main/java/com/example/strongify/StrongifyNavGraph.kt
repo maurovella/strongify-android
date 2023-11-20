@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.example.strongify.ui.screens.FavoriteScreen
 import com.example.strongify.ui.screens.HomeScreen
 import com.example.strongify.ui.screens.LoginScreen
@@ -25,6 +26,9 @@ fun StrongifyNavGraph(
     startDestination: String = Screen.LoginScreenClass.route,
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
 ) {
+    val uri = "http://www.strongify.com"
+    val secureUri = "https://www.strongify.com"
+
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -56,7 +60,11 @@ fun StrongifyNavGraph(
         }
         composable(
             route = Screen.RoutineDetailScreenClass.route,
-            arguments = listOf(navArgument("routineId") { type = NavType.IntType })
+            arguments = listOf(navArgument("routineId") { type = NavType.IntType }),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "$uri/routines/list/{routineId}" },
+                navDeepLink { uriPattern = "$secureUri/routines/list/{routineId}" }
+            )
         ) { NavBackStackEntry ->
             RoutineDetailScreen(
                 routineId = NavBackStackEntry.arguments?.getInt("routineId")!!,
@@ -65,7 +73,11 @@ fun StrongifyNavGraph(
         }
         composable(
             route = Screen.SecuentialRoutineScreenClass.route,
-            arguments = listOf(navArgument("routineId") { type = NavType.IntType })
+            arguments = listOf(navArgument("routineId") { type = NavType.IntType }),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "$uri/routines/sequential/{routineId}" },
+                navDeepLink { uriPattern = "$secureUri/routines/sequential/{routineId}" }
+            )
         ) { NavBackStackEntry ->
             SecuentialRoutineScreen(
                 routineId = NavBackStackEntry.arguments?.getInt("routineId")!!,

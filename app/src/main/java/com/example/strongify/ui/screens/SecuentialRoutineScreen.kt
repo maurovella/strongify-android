@@ -1,5 +1,6 @@
 package com.example.strongify.ui.screens
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +27,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -85,7 +87,15 @@ fun SecuentialRoutineScreen(
     var dropdown by remember {
         mutableStateOf(false)
     }
-    val context = LocalContext.current.applicationContext
+
+    // Share functionality
+    val context = LocalContext.current
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, "https://www.strongify.com/routine/list/${routineId}")  // always the list view is shared
+        type = "text/plain"
+    }
+
     LaunchedEffect(key1 = true) {
         viewModel.getRoutine(routineId = routineId)
     }
@@ -106,6 +116,15 @@ fun SecuentialRoutineScreen(
                 }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+                IconButton(onClick = {
+                    context.startActivity(Intent.createChooser(sendIntent, null))
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
                         contentDescription = null,
                         tint = Color.White
                     )
@@ -520,5 +539,3 @@ fun CountdownTimer(time: Int) {
         }
     }
 }
-
-
