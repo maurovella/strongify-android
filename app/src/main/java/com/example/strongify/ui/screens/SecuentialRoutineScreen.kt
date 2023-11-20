@@ -674,6 +674,7 @@ private fun PhoneLayout(
                         isPhone = true
                     ) // Alto del diálogo)
                 }
+                Spacer(modifier = Modifier.height(100.dp))
             }
         }
     }
@@ -702,7 +703,8 @@ private fun TabletLayout(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(fondo),
+                .background(fondo)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -983,6 +985,7 @@ private fun TabletLayout(
                     isPhone = false
                 ) // Alto del diálogo)
             }
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }

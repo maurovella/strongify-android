@@ -113,7 +113,7 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
                                     val isFaved = favorites?.any { it.id == routine.id } ?: false
                                     if(routine.id == review.routineId && flag == false){
                                         flag = true
-                                        RoutineCard(viewModel,routine = routine, func = navToRoutineDetail , isFaved = isFaved, modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }))
+                                        RoutineCard(viewModel,routine = routine, func = navToRoutineDetail , isFaved = isFaved, modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }), isPhone = true)
                                     }
                                 }
                                 if(review.review != "") {

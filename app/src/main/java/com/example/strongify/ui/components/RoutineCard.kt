@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
@@ -44,6 +45,7 @@ fun RoutineCard(
     func: (Int) -> Unit,
     isFaved: Boolean,
     modifier: Modifier = Modifier,
+    isPhone: Boolean
 ) {
     val isFav = remember { mutableStateOf(isFaved)}
     val difficultyColor = when (routine.difficulty) {
@@ -53,6 +55,8 @@ fun RoutineCard(
         "Experto" -> Color.Black
         else -> Color.Transparent
     }
+    val fontSize = if (isPhone) 20.sp else 30.sp // Define different font sizes for phone and tablet
+
 
     Column(
         modifier = Modifier
@@ -73,7 +77,8 @@ fun RoutineCard(
                 Text(
                     text = routine.name,
                     color = Color.White,
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    fontSize = fontSize
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -85,7 +90,8 @@ fun RoutineCard(
                         color = Color.White,
                         modifier = Modifier
                             .background(difficultyColor)
-                            .padding(4.dp)
+                            .padding(4.dp),
+                        fontSize = fontSize
                     )
                 }
             }

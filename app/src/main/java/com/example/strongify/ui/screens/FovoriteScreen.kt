@@ -32,6 +32,7 @@ fun FavoriteScreen(
     isPhone: Boolean = true
 ) {
     val fondo = Color(0xFF1C2120)
+    val fontSize = if (isPhone) 30.sp else 40.sp // Define different font sizes for phone and tablet
     Surface(color = fondo) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -50,7 +51,7 @@ fun FavoriteScreen(
                 )
                 Text(
                     text = stringResource(id = R.string.nav_favorite),
-                    fontSize = 30.sp,
+                    fontSize = fontSize,
                     color = Color.White,
                     modifier = Modifier.padding(start = 16.dp)
                 )
@@ -70,7 +71,8 @@ fun FavoriteScreen(
                                 routine,
                                 isFaved = true,
                                 modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }),
-                                func = navToRoutineDetail
+                                func = navToRoutineDetail,
+                                isPhone = isPhone
                             )
                         }
                     } else {
@@ -79,7 +81,7 @@ fun FavoriteScreen(
                             Text(
                                 text = stringResource(id = R.string.no_favs),
                                 color = Color.White,
-                                fontSize = 20.sp,
+                                fontSize = fontSize,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)

@@ -46,6 +46,7 @@ fun RoutineScreen(
     }
     val context = LocalContext.current.applicationContext
     val fondo = Color(0xFF1C2120)
+    val fontSize = if (isPhone) 30.sp else 40.sp // Define different font sizes for phone and tablet
     Surface(color = fondo) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -64,7 +65,7 @@ fun RoutineScreen(
                 )
                 Text(
                     text = stringResource(id = R.string.nav_routines),
-                    fontSize = 30.sp,
+                    fontSize = fontSize,
                     color = Color.White,
                     modifier = Modifier.padding(start = 16.dp)
                 )
@@ -175,7 +176,8 @@ fun RoutineScreen(
                                 routine,
                                 isFaved = isFaved,
                                 modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }),
-                                func = navToRoutineDetail
+                                func = navToRoutineDetail,
+                                isPhone = isPhone
                             )
                             if (index == routines.size - 1) {
                                 Box(
@@ -193,7 +195,7 @@ fun RoutineScreen(
                             Text(
                                 text = stringResource(id = R.string.no_routines),
                                 color = Color.White,
-                                fontSize = 20.sp,
+                                fontSize = fontSize,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp)
