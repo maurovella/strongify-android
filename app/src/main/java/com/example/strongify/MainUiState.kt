@@ -23,7 +23,8 @@ data class MainUiState(
     val routinesCycles: List<CompleteCycle> = emptyList(),
     val cycleExercise: List<CompleteCycleExercise> = emptyList(),
     var cycleDataList: List<CycleData> = emptyList(),
-    val currentRoutine: Routine? = null
+    val currentRoutine: Routine? = null,
+    val reviewList: List<Review> = emptyList()
 )
 
 val MainUiState.canGetCurrentUser: Boolean get() = isAuthenticated

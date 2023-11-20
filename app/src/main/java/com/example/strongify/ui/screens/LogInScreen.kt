@@ -62,8 +62,8 @@ private fun PhoneLayout(
     onLogin: () -> Unit = {},
     navToRegister: () -> Unit = {}
 ) {
-    val userState = remember { mutableStateOf("") }
-    val pswState = remember { mutableStateOf("") }
+    val userState = remember { mutableStateOf("johndoee") }
+    val pswState = remember { mutableStateOf("1234567890") }
     val context = LocalContext.current
 
         Column(

@@ -61,6 +61,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.ui.components.ExerciseCard
+import com.example.strongify.ui.components.RateDialog
 import com.example.strongify.util.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -316,7 +317,8 @@ private fun PhoneLayout(
                             review.value = false // Cierra el diálogo
                         },
                         viewModel,
-                        routineId
+                        routineId,
+                        isPhone = true
                     ) // Alto del diálogo)
                 }
             }
@@ -550,7 +552,8 @@ private fun PhoneLayout(
                         review.value = false // Cierra el diálogo
                     },
                     viewModel,
-                    routineId
+                    routineId,
+                    isPhone = false
                 ) // Alto del diálogo)
             }
         }
@@ -789,7 +792,8 @@ private fun TabletLayout(
                         review.value = false // Cierra el diálogo
                     },
                     viewModel,
-                    routineId
+                    routineId,
+                    isPhone = false
                 ) // Alto del diálogo)
             }
         }

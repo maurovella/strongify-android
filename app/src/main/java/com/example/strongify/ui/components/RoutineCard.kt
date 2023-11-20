@@ -43,7 +43,7 @@ fun RoutineCard(
     routine: Routine,
     func: (Int) -> Unit,
     isFaved: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val isFav = remember { mutableStateOf(isFaved)}
     val difficultyColor = when (routine.difficulty) {
@@ -80,12 +80,6 @@ fun RoutineCard(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Info,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.clickable { func(routine.id) }
-                    )
                     Text(
                         text = routine.difficulty!!,
                         color = Color.White,

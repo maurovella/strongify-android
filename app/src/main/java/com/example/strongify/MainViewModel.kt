@@ -177,6 +177,16 @@ class MainViewModel(
         )
     }
 
+    fun getReviews(routineId: Int) {
+        runOnViewModelScope(
+            { reviewRepository.getReviews(routineId,true) },
+            { state, response -> state.copy(
+                reviewList = response
+            )
+            }
+        )
+    }
+
     private fun <R> runOnViewModelScopeLogin(
         block: suspend () -> R,
         updateState: (MainUiState, R) -> MainUiState,
