@@ -553,7 +553,7 @@ private fun PhoneLayout(
                     },
                     viewModel,
                     routineId,
-                    isPhone = false
+                    isPhone = true
                 ) // Alto del diálogo)
             }
         }

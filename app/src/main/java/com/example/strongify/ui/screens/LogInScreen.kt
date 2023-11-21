@@ -68,7 +68,9 @@ private fun PhoneLayout(
     val imgHeight = 0.4f
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -89,7 +91,8 @@ private fun PhoneLayout(
                 .fillMaxWidth()
                 .weight(1f)
                 .background(color = Color(0xFF1C2120))
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

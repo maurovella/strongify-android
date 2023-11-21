@@ -172,6 +172,9 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
 @Composable
 private fun TabletLayout(uiState: MainUiState, viewModel: MainViewModel, navToRoutineDetail: (Int) -> Unit) {
     val fondo = Color(0xFF1C2120)
+    val currentScore = remember {
+        mutableIntStateOf(7)
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -179,27 +182,87 @@ private fun TabletLayout(uiState: MainUiState, viewModel: MainViewModel, navToRo
             .fillMaxSize(1f)
             .background(fondo),
     ) {
-        Text(
-            text = stringResource(R.string.nav_home),
-            fontSize = 40.sp
-        )
-        ElevatedButton(
-            onClick = {
-                viewModel.getCurrentUser()
-            },
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(text = "Button for Tablet")
+        LaunchedEffect(key1 = true) {
+            viewModel.getRoutines() // Llama a getRoutines solo una vez cuando se carga la pantalla
         }
-        val currentUserData = uiState.currentUser?.let {
-            "Current User: ${it.firstName} ${it.lastName} (${it.email})"
-        }
-        Text(
-            text = currentUserData ?: "NO HAY USUARIO",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-            fontSize = 24.sp
+        Text(text = "Rutina recomendada: ", color = Color.White, fontSize = 30.sp)
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            content = {
+                //viewModel.getRoutines()
+                val reviews = viewModel.uiState.reviewList
+                val routines = viewModel.uiState.routines
+                val favorites = viewModel.uiState.favorites
+                var scoreProm = 0.0;
+                if(!routines.isNullOrEmpty()) {
+                    itemsIndexed(routines) { index, routine ->
+                        LaunchedEffect(key1 = true) {
+                            viewModel.getReviews(routine.id)
+                        }
+                    }
+                }
+                if (reviews.isNotEmpty()) {
+                    val hasReviewAboveCurrentScore = reviews.any { it.score > currentScore.intValue }
+                    var flag = false
+                    if (hasReviewAboveCurrentScore) {
+                        itemsIndexed(reviews) { index, review ->
+                            if (review.score > currentScore.intValue) {
+                                routines!!.forEach{ routine->
+                                    val isFaved = favorites?.any { it.id == routine.id } ?: false
+                                    if(routine.id == review.routineId && flag == false){
+                                        flag = true
+                                        RoutineCard(viewModel,routine = routine, func = navToRoutineDetail , isFaved = isFaved, modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }), isPhone = true)
+                                    }
+                                }
+                                if(review.review != "") {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .background(
+                                                color = Color.Gray,
+                                                shape = RoundedCornerShape(8.dp)
+                                            )
+                                            .padding(12.dp)
+                                    ) {
+                                        Column {
+                                            Text(
+                                                text = "Puntuacion valorada por el usuario: " + review.score.toString(),
+                                                color = Color.White,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 16.sp
+                                            )
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            Text(
+                                                text = review.review,
+                                                color = Color.White,
+                                                fontSize = 14.sp
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            if (index == reviews.size - 1) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                        .background(fondo)
+                                )
+                            }
+                        }
+                    } else {
+                        item {
+                            // Mostrar mensaje cuando ninguna revisión tenga una puntuación mayor a currentScore.intValue
+                            NoReviewsScreen()
+                        }
+                    }
+                } else {
+                    item {
+                        // Mostrar mensaje cuando no haya revisiones en absoluto
+                        NoReviewsScreen()
+                    }
+                }
+            }
         )
     }
 }
