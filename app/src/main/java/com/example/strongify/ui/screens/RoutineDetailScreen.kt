@@ -107,7 +107,9 @@ fun RoutineDetailScreen(
                         tint = Color.White
                     )
                 }
-                IconButton(onClick = {
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = {
                     context.startActivity(Intent.createChooser(sendIntent, null))
                 }) {
                     Icon(

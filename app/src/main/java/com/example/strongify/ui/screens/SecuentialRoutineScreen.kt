@@ -120,6 +120,7 @@ fun SecuentialRoutineScreen(
                         tint = Color.White
                     )
                 }
+                Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = {
                     context.startActivity(Intent.createChooser(sendIntent, null))
                 }) {
