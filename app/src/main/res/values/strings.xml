@@ -42,4 +42,9 @@
     <string name="insp_pain">Pain is temporary. Quitting lasts forever.</string>
     <string name="insp_pain2">The pain you feel today will be the strength you feel tomorrow.</string>
     <string name="insp_pain3">Pain is weakness leaving the body.</string>
+    <string name="rookie">Rookie</string>
+    <string name="begginer">Begginer</string>
+    <string name="intermediate">Intermediate</string>
+    <string name="advanced">Advanced</string>
+    <string name="expert">Expert</string>
 </resources>

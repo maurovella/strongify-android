@@ -43,4 +43,9 @@
     <string name="insp_pain">El dolor es temporal. Rendirse dura para siempre.</string>
     <string name="insp_pain2">El dolor que sientes hoy será la fuerza que sentirás mañana.</string>
     <string name="insp_pain3">El dolor es debilidad que abandona el cuerpo.</string>
+    <string name="rookie">Novato</string>
+    <string name="begginer">Principiante</string>
+    <string name="intermediate">Intermedio</string>
+    <string name="advanced">Avanzado</string>
+    <string name="expert">Experto</string>
 </resources>

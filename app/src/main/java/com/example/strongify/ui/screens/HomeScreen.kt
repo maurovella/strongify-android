@@ -298,12 +298,12 @@ private fun TabletLayout(
 @Composable
 fun NoReviewsScreen() {
     val gymImages = listOf(
-        R.drawable.gym,
-        R.drawable.ejercicio_1,
-        R.drawable.login_img,
-        R.drawable.register_img,
-        R.drawable.gym,
-        R.drawable.ejercicio_1
+        R.drawable.gym1,
+        R.drawable.gym2,
+        R.drawable.gym3,
+        R.drawable.gym4,
+        R.drawable.gym5,
+        R.drawable.gym6
     )
 
     val inspirationalMessages = listOf(

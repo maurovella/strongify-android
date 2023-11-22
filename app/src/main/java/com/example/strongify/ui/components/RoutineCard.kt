@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,12 +50,22 @@ fun RoutineCard(
     modifier: Modifier = Modifier,
     isPhone: Boolean
 ) {
+    val image = when (routine.category.name) {
+        "Hombros"  -> painterResource(R.drawable.hombros)
+        "Pecho"  -> painterResource(id = R.drawable.pecho)
+        "Espalda" -> painterResource(id = R.drawable.espalda)
+        "Piernas" -> painterResource(id = R.drawable.piernas)
+        "Biceps" -> painterResource(id = R.drawable.biceps)
+        "Triceps" -> painterResource(id = R.drawable.triceps)
+        "Abdominales" -> painterResource(id = R.drawable.abs)
+        else -> painterResource(id = R.drawable.gym)
+    }
     val isFav = remember { mutableStateOf(isFaved)}
     val difficultyColor = when (routine.difficulty) {
-        "Novato", "Principiante" -> Color.Green
-        "Intermedio" -> Color.Yellow
-        "Avanzado" -> Color.Red
-        "Experto" -> Color.Black
+        stringResource(R.string.rookie), stringResource(id = R.string.begginer) -> Color.Green
+        stringResource(R.string.intermediate) -> Color.Yellow
+        stringResource(R.string.advanced) -> Color.Red
+        stringResource(R.string.expert) -> Color.Black
         else -> Color.Transparent
     }
     val fontSize = if (isPhone) 20.sp else 30.sp // Define different font sizes for phone and tablet
@@ -103,28 +114,37 @@ fun RoutineCard(
                     imageVector = Icons.Filled.Favorite,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.padding(8.dp).size(32.dp)
-                        .clickable { CoroutineScope(Dispatchers.Main).launch{
-                            viewModel.addFavorite(routine.id)
-                        }
-                                   isFav.value = !isFav.value},
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(32.dp)
+                        .clickable {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                viewModel.addFavorite(routine.id)
+                            }
+                            isFav.value = !isFav.value
+                        },
                 )
             } else {
                 Icon(
                     imageVector = Icons.Filled.Favorite,
                     contentDescription = null,
                     tint = Color.Red,
-                    modifier = Modifier.padding(8.dp).size(32.dp)
-                        .clickable { CoroutineScope(Dispatchers.Main).launch{
-                            viewModel.deleteFavorite(routine.id)}
-                                   isFav.value = !isFav.value},
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(32.dp)
+                        .clickable {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                viewModel.deleteFavorite(routine.id)
+                            }
+                            isFav.value = !isFav.value
+                        },
                 )
             }
         }
 
         // Imagen por defecto (¡Recuerda reemplazar el recurso con la imagen adecuada!)
         Image(
-            painter = painterResource(R.drawable.gym),
+            painter = image,
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
