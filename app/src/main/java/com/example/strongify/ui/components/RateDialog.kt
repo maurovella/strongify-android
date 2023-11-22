@@ -78,7 +78,7 @@ fun RateDialog(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = stringResource(id = R.string.finished_routine),
+                            text = stringResource(id = R.string.finished_routine) + viewModel.uiState.currentRoutine?.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             textAlign = TextAlign.Center
@@ -92,7 +92,7 @@ fun RateDialog(
                                     score = newValue
                                 }
                             },
-                            label = { Text("Puntaje (1-10)") },
+                            label = { Text(stringResource(id = R.string.rating)) },
                             singleLine = true,
                             isError = !isValidScore(score), // Muestra error si el puntaje no es válido
                             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -100,7 +100,7 @@ fun RateDialog(
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = "Comentario", color = Color.Black)
+                        Text(text = stringResource(id = R.string.comment), color = Color.Black)
                         BasicTextField(
                             value = reviewText,
                             onValueChange = { reviewText = it },
@@ -134,7 +134,7 @@ fun RateDialog(
                             Button(
                                 onClick = onCancel
                             ) {
-                                Text(text = "Cancelar")
+                                Text(text = stringResource(id = R.string.cancel))
                             }
                             Button(
                                 onClick = {
@@ -144,7 +144,7 @@ fun RateDialog(
                                 },
                                 modifier = Modifier.padding(end = 8.dp)
                             ) {
-                                Text(text = "Confirmar")
+                                Text(text = stringResource(id = R.string.confirm))
                             }
 
                         }
@@ -173,7 +173,7 @@ fun RateDialog(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = stringResource(id = R.string.finished_routine),
+                            text = stringResource(id = R.string.finished_routine) + viewModel.uiState.currentRoutine?.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             textAlign = TextAlign.Center
@@ -187,7 +187,7 @@ fun RateDialog(
                                     score = newValue
                                 }
                             },
-                            label = { Text("Puntaje (1-10)") },
+                            label = { Text(stringResource(id = R.string.rating)) },
                             singleLine = true,
                             isError = !isValidScore(score), // Muestra error si el puntaje no es válido
                             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -195,7 +195,7 @@ fun RateDialog(
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = "Comentario", color = Color.Black)
+                        Text(text = stringResource(id = R.string.comment), color = Color.Black)
                         BasicTextField(
                             value = reviewText,
                             onValueChange = { reviewText = it },
@@ -229,7 +229,7 @@ fun RateDialog(
                             Button(
                                 onClick = onCancel
                             ) {
-                                Text(text = "Cancelar")
+                                Text(text = stringResource(id = R.string.cancel))
                             }
                             Button(
                                 onClick = {
@@ -239,7 +239,7 @@ fun RateDialog(
                                 },
                                 modifier = Modifier.padding(end = 8.dp)
                             ) {
-                                Text(text = "Confirmar")
+                                Text(text = stringResource(id = R.string.confirm))
                             }
 
                         }

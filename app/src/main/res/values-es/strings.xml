@@ -11,7 +11,7 @@
     <string name="login_error">Contraseña o usuario invalido!</string>
     <string name="no_account_msg">¿No tienes una cuenta? </string>
     <string name="register_cta">¡Regístrate!</string>
-    <string name="finished_routine">Finalizaste la rutina: RUTINA</string>
+    <string name="finished_routine">Finalizaste la rutina: </string>
     <string name="rate">Califícala</string>
     <string name="register">Registrarse</string>
     <string name="no_routines">Ups! Parece que todavía no tienes rutinas!</string>
@@ -31,4 +31,10 @@
     <string name="est_time">Tiempo estimado:              </string>
     <string name="curr_series">Serie actual: </string>
     <string name="list">Listado</string>
+    <string name="recommended_routine">Rutina recomendada: </string>
+    <string name="rating_by_user">Puntuacion valorada por el usuario: </string>
+    <string name="rating">Puntaje (1-10)</string>
+    <string name="comment">Comentario</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
 </resources>

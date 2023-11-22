@@ -87,7 +87,7 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
         LaunchedEffect(key1 = true) {
             viewModel.getRoutines() // Llama a getRoutines solo una vez cuando se carga la pantalla
         }
-        Text(text = "Rutina recomendada: ", color = Color.White, fontSize = 30.sp)
+        Text(text = stringResource(id = R.string.recommended_routine), color = Color.White, fontSize = 30.sp)
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             content = {
@@ -128,7 +128,7 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
                                     ) {
                                         Column {
                                             Text(
-                                                text = "Puntuacion valorada por el usuario: " + review.score.toString(),
+                                                text = stringResource(id = R.string.rating_by_user) + review.score.toString(),
                                                 color = Color.White,
                                                 fontWeight = FontWeight.Bold,
                                                 fontSize = 16.sp
@@ -185,7 +185,7 @@ private fun TabletLayout(uiState: MainUiState, viewModel: MainViewModel, navToRo
         LaunchedEffect(key1 = true) {
             viewModel.getRoutines() // Llama a getRoutines solo una vez cuando se carga la pantalla
         }
-        Text(text = "Rutina recomendada: ", color = Color.White, fontSize = 30.sp)
+        Text(text = stringResource(id = R.string.recommended_routine), color = Color.White, fontSize = 30.sp)
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             content = {
@@ -226,7 +226,7 @@ private fun TabletLayout(uiState: MainUiState, viewModel: MainViewModel, navToRo
                                     ) {
                                         Column {
                                             Text(
-                                                text = "Puntuacion valorada por el usuario: " + review.score.toString(),
+                                                text = stringResource(id = R.string.rating_by_user) + review.score.toString(),
                                                 color = Color.White,
                                                 fontWeight = FontWeight.Bold,
                                                 fontSize = 16.sp

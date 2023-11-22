@@ -10,7 +10,7 @@
     <string name="login_error">Invalid password or user!</string>
     <string name="no_account_msg">Don\'t have an account? </string>
     <string name="register_cta">Register!</string>
-    <string name="finished_routine">You\'ve finished the routine: ROUTINE</string>
+    <string name="finished_routine">You\'ve finished the routine: </string>
     <string name="rate">Rate it</string>
     <string name="register">Register</string>
     <string name="no_routines">Oops! Seems like you don\'t have any routines yet!</string>
@@ -30,4 +30,10 @@
     <string name="est_time">Estimated time:</string>
     <string name="curr_series">Current series: </string>
     <string name="list">Listed</string>
+    <string name="recommended_routine">Recommended routine: </string>
+    <string name="rating_by_user">Rating by the user: </string>
+    <string name="rating">Rating (1–10)</string>
+    <string name="comment">Comment</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 </resources>
