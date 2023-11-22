@@ -402,6 +402,7 @@ private fun PhoneLayout(
                     ) {
                         Text(text = stringResource(id = R.string.finish))
                     }
+                    Spacer(modifier = Modifier.height(200.dp))
                 }
                 if (review.value) {
                     RateDialog(
@@ -680,6 +681,7 @@ private fun PhoneLayout(
                     ) {
                         Text(text = stringResource(id = R.string.finish))
                     }
+                    Spacer(modifier = Modifier.height(200.dp))
                 }
                 if (review.value) {
                     RateDialog( modifier = Modifier
@@ -991,6 +993,7 @@ private fun TabletLayout(
                 ) {
                     Text(text = stringResource(id = R.string.finish), fontSize = 25.sp)
                 }
+                Spacer(modifier = Modifier.height(200.dp))
             }
             if (review.value) {
                 RateDialog( modifier = Modifier

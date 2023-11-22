@@ -76,7 +76,7 @@ fun HomeScreen(
 private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navController: NavController) {
     val fondo = Color(0xFF1C2120)
     val currentScore = remember {
-        mutableIntStateOf(7)
+        mutableIntStateOf(12)
     }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
