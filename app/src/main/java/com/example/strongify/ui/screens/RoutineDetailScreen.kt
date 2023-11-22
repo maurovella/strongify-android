@@ -564,7 +564,7 @@ private fun PhoneLayout(
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(id = R.string.sequential)) },
                                         onClick = {
-                                            navController.navigate(Screen.RoutineScreenClass.route + "/sequential/" + routineId)
+                                            navController.navigate(Screen.RoutineScreenClass.route + "/sequential/" + "$routineId")
                                         }
                                     )
                                 }

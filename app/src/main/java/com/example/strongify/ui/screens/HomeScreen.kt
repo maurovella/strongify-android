@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.strongify.MainUiState
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
@@ -58,21 +59,21 @@ import kotlinx.coroutines.channels.ticker
 @Composable
 fun HomeScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-    navToRoutineDetail: (Int) -> Unit,
+    navController: NavController,
     isPhone: Boolean = true
 ) {
     val uiState = viewModel.uiState
     Surface {
         if (isPhone) {
-            PhoneLayout(uiState = uiState, viewModel = viewModel, navToRoutineDetail)
+            PhoneLayout(uiState = uiState, viewModel = viewModel, navController)
         } else {
-            TabletLayout(uiState = uiState, viewModel = viewModel, navToRoutineDetail)
+            TabletLayout(uiState = uiState, viewModel = viewModel, navController)
         }
     }
 }
 
 @Composable
-private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRoutineDetail: (Int) -> Unit) {
+private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navController: NavController) {
     val fondo = Color(0xFF1C2120)
     val currentScore = remember {
         mutableIntStateOf(7)
@@ -87,7 +88,6 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
         LaunchedEffect(key1 = true) {
             viewModel.getRoutines() // Llama a getRoutines solo una vez cuando se carga la pantalla
         }
-        Text(text = stringResource(id = R.string.recommended_routine), color = Color.White, fontSize = 30.sp)
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             content = {
@@ -108,6 +108,13 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
                     var flag = false
                     var routine_r_id = 0;
                     if (hasReviewAboveCurrentScore) {
+                        item {
+                            Text(
+                                text = stringResource(id = R.string.recommended_routine),
+                                color = Color.White,
+                                fontSize = 30.sp
+                            )
+                        }
                         itemsIndexed(reviews) { index, review ->
                             if (review.score > currentScore.intValue) {
                                 routines!!.forEach{ routine->
@@ -115,7 +122,14 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
                                     if(routine.id == review.routineId && flag == false){
                                         flag = true
                                         routine_r_id = routine.id
-                                        RoutineCard(viewModel,routine = routine, func = navToRoutineDetail , isFaved = isFaved, modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }), isPhone = true)
+                                        RoutineCard(
+                                            viewModel,
+                                            routine = routine,
+                                            navController = navController,
+                                            isFaved = isFaved,
+                                            modifier = Modifier.clickable(onClick = {navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/${routine.id}")}),
+                                            isPhone = true
+                                        )
                                     }
                                 }
                                 if(review.review != "" && review.routineId == routine_r_id) {
@@ -172,7 +186,11 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
 }
 
 @Composable
-private fun TabletLayout(uiState: MainUiState, viewModel: MainViewModel, navToRoutineDetail: (Int) -> Unit) {
+private fun TabletLayout(
+    uiState: MainUiState,
+    viewModel: MainViewModel,
+    navController: NavController
+) {
     val fondo = Color(0xFF1C2120)
     val currentScore = remember {
         mutableIntStateOf(7)
@@ -213,7 +231,14 @@ private fun TabletLayout(uiState: MainUiState, viewModel: MainViewModel, navToRo
                                     val isFaved = favorites?.any { it.id == routine.id } ?: false
                                     if(routine.id == review.routineId && flag == false){
                                         flag = true
-                                        RoutineCard(viewModel,routine = routine, func = navToRoutineDetail , isFaved = isFaved, modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }), isPhone = true)
+                                        RoutineCard(
+                                            viewModel,
+                                            routine = routine,
+                                            navController = navController,
+                                            isFaved = isFaved,
+                                            modifier = Modifier.clickable(onClick = {navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/${routine.id}")}),
+                                            isPhone = true
+                                        )
                                     }
                                 }
                                 if(review.review != "") {
@@ -282,9 +307,11 @@ fun NoReviewsScreen() {
     )
 
     val inspirationalMessages = listOf(
-        "¡Entrena con pasión!",
-        "El éxito no llega sin esfuerzo.",
-        "Tu cuerpo es tu templo."
+        stringResource(id = R.string.insp_pasion),
+        stringResource(id = R.string.insp_motivation),
+        stringResource(id = R.string.insp_pain),
+        stringResource(id = R.string.insp_pain2),
+        stringResource(id = R.string.insp_pain3)
     )
 
     Box(
@@ -294,7 +321,7 @@ fun NoReviewsScreen() {
             .background(color = Color.Red)
     ) {
         Text(
-            text = "¡HAZ EJERCICIO CON STROGIFY!",
+            text = stringResource(R.string.exercise_strongify),
             fontSize = 24.sp,
             color = Color.White,
             textAlign = TextAlign.Center,

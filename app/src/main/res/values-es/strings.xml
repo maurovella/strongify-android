@@ -37,4 +37,10 @@
     <string name="comment">Comentario</string>
     <string name="cancel">Cancelar</string>
     <string name="confirm">Confirmar</string>
+    <string name="exercise_strongify">¡Haz ejercicio con Strongify!</string>
+    <string name="insp_pasion">¡Entrená con pasión!</string>
+    <string name="insp_motivation">La motivación es lo que te hace empezar. El hábito es lo que te mantiene en marcha.</string>
+    <string name="insp_pain">El dolor es temporal. Rendirse dura para siempre.</string>
+    <string name="insp_pain2">El dolor que sientes hoy será la fuerza que sentirás mañana.</string>
+    <string name="insp_pain3">El dolor es debilidad que abandona el cuerpo.</string>
 </resources>

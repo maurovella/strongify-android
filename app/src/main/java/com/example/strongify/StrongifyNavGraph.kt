@@ -40,7 +40,6 @@ fun StrongifyNavGraph(
         fun isTablet(): Boolean {
             val configuration = LocalConfiguration.current
             return if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
                 configuration.screenWidthDp > 900
             } else {
                 configuration.screenWidthDp > 600
@@ -69,7 +68,7 @@ fun StrongifyNavGraph(
             route = Screen.HomeScreenClass.route
         ) {
             HomeScreen(
-                navToRoutineDetail = {route -> navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/$route") },
+                navController = navController,
                 isPhone = !isTablet()
             )
         }
