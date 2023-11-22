@@ -106,6 +106,7 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
                 if (reviews.isNotEmpty()) {
                     val hasReviewAboveCurrentScore = reviews.any { it.score > currentScore.intValue }
                     var flag = false
+                    var routine_r_id = 0;
                     if (hasReviewAboveCurrentScore) {
                         itemsIndexed(reviews) { index, review ->
                             if (review.score > currentScore.intValue) {
@@ -113,10 +114,11 @@ private fun PhoneLayout(uiState: MainUiState, viewModel: MainViewModel, navToRou
                                     val isFaved = favorites?.any { it.id == routine.id } ?: false
                                     if(routine.id == review.routineId && flag == false){
                                         flag = true
+                                        routine_r_id = routine.id
                                         RoutineCard(viewModel,routine = routine, func = navToRoutineDetail , isFaved = isFaved, modifier = Modifier.clickable(onClick = { navToRoutineDetail(routine.id) }), isPhone = true)
                                     }
                                 }
-                                if(review.review != "") {
+                                if(review.review != "" && review.routineId == routine_r_id) {
                                     Box(
                                         modifier = Modifier
                                             .padding(16.dp)
