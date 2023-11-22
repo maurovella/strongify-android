@@ -70,7 +70,7 @@ fun BottomBar(
                 icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
                 label = { Text(text = item.title) },
                 alwaysShowLabel = true,
-                selected = currentRoute == item.route,
+                selected = currentRoute == item.route || (item.route == Screen.RoutineScreenClass.route && (currentRoute == Screen.SecuentialRoutineScreenClass.route || currentRoute == Screen.RoutineDetailScreenClass.route)),
                 onClick = { onNavigateToRoute(item.route) }
             )
         }

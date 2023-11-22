@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.strongify.MainUiState
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
@@ -39,19 +40,18 @@ import com.example.strongify.util.getViewModelFactory
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun LoginScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     onLogin: () -> Unit = {},
-    navToRegister: () -> Unit = {},
+    navController: NavController,
     isPhone: Boolean = true
 ) {
     Surface {
         if (isPhone) {
-            PhoneLayout(viewModel = viewModel, onLogin, navToRegister)
+            PhoneLayout(viewModel = viewModel, onLogin)
         } else {
-            TabletLayout(viewModel = viewModel, onLogin, navToRegister)
+            TabletLayout(viewModel = viewModel, onLogin)
         }
     }
 }
@@ -59,8 +59,7 @@ fun LoginScreen(
 @Composable
 private fun PhoneLayout(
     viewModel: MainViewModel,
-    onLogin: () -> Unit = {},
-    navToRegister: () -> Unit = {}
+    onLogin: () -> Unit = {}
 ) {
     val userState = remember { mutableStateOf("") }
     val pswState = remember { mutableStateOf("") }
@@ -194,8 +193,7 @@ private fun PhoneLayout(
 @Composable
 private fun TabletLayout(
     viewModel: MainViewModel,
-    onLogin: () -> Unit = {},
-    navToRegister: () -> Unit = {}
+    onLogin: () -> Unit = {}
 ) {
     val userState = remember { mutableStateOf("") }
     val pswState = remember { mutableStateOf("") }

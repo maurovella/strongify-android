@@ -1,6 +1,7 @@
 package com.example.strongify.ui.screens
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -58,6 +59,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.ui.components.ExerciseCard
@@ -70,14 +72,14 @@ import com.example.strongify.util.getViewModelFactory
 fun RoutineDetailScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     routineId: Int,
-    nav: (Int) -> Unit,
+    navController: NavController,
     isPhone: Boolean = true
 ) {
     Surface {
         if (isPhone) {
-            PhoneLayout(viewModel = viewModel, routineId, nav)
+            PhoneLayout(viewModel = viewModel, routineId, navController)
         } else {
-            TabletLayout(viewModel = viewModel, routineId, nav)
+            TabletLayout(viewModel = viewModel, routineId, navController)
         }
     }
 }
@@ -86,7 +88,7 @@ fun RoutineDetailScreen(
 private fun PhoneLayout(
     viewModel: MainViewModel,
     routineId: Int,
-    nav: (Int) -> Unit
+    navController: NavController
 ) {
     val cycleIdx = remember { mutableIntStateOf(0) }
     val review = remember { mutableStateOf(false) }
@@ -97,7 +99,12 @@ private fun PhoneLayout(
         mutableStateOf(false)
     }
 
-    val context = LocalContext.current.applicationContext
+    val context = LocalContext.current
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, "https://www.strongify.com/routine/list/${routineId}")
+        type = "text/plain"
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.getRoutine(routineId = routineId)
@@ -119,12 +126,27 @@ private fun PhoneLayout(
                         .padding(start = 16.dp, top = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.clickable { /* Acción al presionar la flecha */ }
-                    )
+                    IconButton(onClick = {
+                        if(!navController.popBackStack())
+                            navController.navigate(Screen.HomeScreenClass.route)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(
+                        onClick = {
+                            context.startActivity(Intent.createChooser(sendIntent, null))
+                        }) {
+                        Icon(
+                            imageVector = Icons.Filled.Share,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
                 }
                 Text(
                     text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
@@ -192,7 +214,7 @@ private fun PhoneLayout(
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(id = R.string.sequential)) },
                                         onClick = {
-                                            nav(routineId)
+                                            navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/$routineId")
                                         }
                                     )
                                 }
@@ -341,12 +363,27 @@ private fun PhoneLayout(
                             .padding(start = 16.dp, top = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.clickable { /* Acción al presionar la flecha */ }
-                        )
+                        IconButton(onClick = {
+                            if(!navController.popBackStack())
+                                navController.navigate(Screen.HomeScreenClass.route)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        IconButton(
+                            onClick = {
+                                context.startActivity(Intent.createChooser(sendIntent, null))
+                            }) {
+                            Icon(
+                                imageVector = Icons.Filled.Share,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
                     }
                     Text(
                         text = viewModel.uiState.currentRoutine!!.name.uppercase(), // Convierte el texto a mayúsculas
@@ -527,7 +564,7 @@ private fun PhoneLayout(
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(id = R.string.sequential)) },
                                         onClick = {
-                                            nav(routineId)
+                                            navController.navigate(Screen.RoutineScreenClass.route + "/sequential/" + routineId)
                                         }
                                     )
                                 }
@@ -569,7 +606,7 @@ private fun PhoneLayout(
 private fun TabletLayout(
     viewModel: MainViewModel,
     routineId: Int,
-    nav: (Int) -> Unit
+    navController: NavController
 ) {
     val cycleIdx = remember { mutableIntStateOf(0) }
     val review = remember { mutableStateOf(false) }
@@ -671,7 +708,7 @@ private fun TabletLayout(
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.sequential), fontSize = 20.sp) },
                                     onClick = {
-                                        nav(routineId)
+                                        navController.navigate(Screen.RoutineScreenClass.route + "/sequential/" + routineId)
                                     }
                                 )
                             }

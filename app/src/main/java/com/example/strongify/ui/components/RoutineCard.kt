@@ -30,9 +30,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.strongify.MainViewModel
 import com.example.strongify.R
 import com.example.strongify.data.model.Routine
+import com.example.strongify.ui.screens.Screen
 import com.example.strongify.util.getViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +44,7 @@ import kotlinx.coroutines.launch
 fun RoutineCard(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     routine: Routine,
-    func: (Int) -> Unit,
+    navController: NavController,
     isFaved: Boolean,
     modifier: Modifier = Modifier,
     isPhone: Boolean
@@ -128,7 +130,9 @@ fun RoutineCard(
                 .fillMaxWidth()
                 .aspectRatio(1.5f) // Proporción más ancha que larga
                 .clip(shape = RoundedCornerShape(8.dp))
-                .clickable { func(routine.id) }
+                .clickable {
+                    navController.navigate(Screen.RoutineScreenClass.route + "/sequential" + "/${routine.id}")
+                }
         )
     }
 }
