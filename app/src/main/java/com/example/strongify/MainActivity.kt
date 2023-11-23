@@ -4,14 +4,28 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -52,17 +66,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun BottomBar(
     currentRoute: String?,
     onNavigateToRoute: (String) -> Unit
 ) {
+    var showFavorite by remember { mutableStateOf(true) }
+
     val items = listOf(
         Screen.HomeScreenClass,
         Screen.RoutineScreenClass,
         Screen.FavoriteScreenClass
-    )
+    ).filter { it != Screen.FavoriteScreenClass || showFavorite }
+
+    val favoriteIcon = if (showFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
 
     NavigationBar {
         items.forEach { item ->
@@ -70,13 +87,21 @@ fun BottomBar(
                 icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
                 label = { Text(text = item.title) },
                 alwaysShowLabel = true,
-                selected = currentRoute == item.route || (item.route == Screen.RoutineScreenClass.route && (currentRoute == Screen.SecuentialRoutineScreenClass.route || currentRoute == Screen.RoutineDetailScreenClass.route)),
+                selected = currentRoute == item.route ||
+                        (item.route == Screen.RoutineScreenClass.route &&
+                                (currentRoute == Screen.SecuentialRoutineScreenClass.route ||
+                                        currentRoute == Screen.RoutineDetailScreenClass.route)),
                 onClick = { onNavigateToRoute(item.route) }
             )
         }
 
+        IconButton(onClick = { showFavorite = !showFavorite }) {
+            Icon(imageVector = favoriteIcon, contentDescription = "Toggle Favorite")
+        }
     }
 }
+
+
 
 /*
 @OptIn(ExperimentalMaterial3Api::class)
