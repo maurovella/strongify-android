@@ -2,7 +2,6 @@ package com.example.strongify.data.repository
 
 import com.example.strongify.data.model.Routine
 import com.example.strongify.data.network.FavouriteRemoteDataSource
-import com.example.strongify.data.network.RemoteDataSource
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 

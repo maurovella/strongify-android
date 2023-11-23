@@ -1,7 +1,6 @@
 package com.example.strongify.data.repository
 
 import com.example.strongify.data.model.Review
-import com.example.strongify.data.model.Sport
 import com.example.strongify.data.network.ReviewRemoteDataSource
 
 import kotlinx.coroutines.sync.Mutex
